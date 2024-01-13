@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 import com.kauailabs.navx.frc.*;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.*;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -13,10 +15,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.swerveSupport.SwerveModule;
 import frc.robot.subsystems.swerveSupport.SwerveModuleConfiguration;
 
 public class DriveTrain extends SubsystemBase {
+    Pigeon2 pigeon = new Pigeon2(Constants.PigeonId); //CHANGE ME ASAP
     private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
     private final SwerveModule m_frontLeftModule;
@@ -27,7 +31,7 @@ public class DriveTrain extends SubsystemBase {
     SwerveDrivePoseEstimator m_PosEstimator;
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
                             (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0) * 0.10033 * Math.PI;
-    private float headingOffset = 0;
+    private double headingOffset = 0;
 
     public static final double MAX_VOLTAGE = 12.0;
 
@@ -43,11 +47,15 @@ public class DriveTrain extends SubsystemBase {
     );
 
     public Rotation2d getGyroscopeRotation() {    
-        return Rotation2d.fromDegrees(m_navx.getFusedHeading() - headingOffset);
+        double yaww=pigeon.getYaw().getValueAsDouble();
+        if(yaww<0)
+            yaww+=360;
+            yaww=360-yaww;
+        return Rotation2d.fromDegrees(yaww-headingOffset);
     }
 
     public void setRotationalOffsetToCurrent(){
-        headingOffset =  m_navx.getFusedHeading();
+        headingOffset = getGyroscopeRotation().getDegrees();
     }
       
     public DriveTrain(){
