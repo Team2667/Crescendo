@@ -4,8 +4,9 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,7 +19,7 @@ public class SwerveModule {
     private RelativeEncoderResetTracker relativeEncoderTracker = new RelativeEncoderResetTracker();
     private CANCoder absoluteSteerEncoder;
     private CANSparkMax steerMotor;
-    private CANSparkMax driveMotor;
+    private CANSparkFlex driveMotor;
     private RelativeEncoder steerRelativeEncoder;
     private SwerveModuleConfiguration cfg;
     private static final double MAX_VOLTAGE = 12.0;
@@ -28,7 +29,7 @@ public class SwerveModule {
         absoluteSteerEncoder = createAbsoluteCanEncoder(cfg.steerAbsoluteEncoderCanId, cfg.steeringOffsetInRadians);
         steerMotor = new CANSparkMax(cfg.steerMotorCanId, MotorType.kBrushless);
         setPIDValues(steerMotor, config.steerP, config.steerI, config.steerD);
-        driveMotor = new CANSparkMax(cfg.driveMotorCanId, MotorType.kBrushless);
+        driveMotor = new CANSparkFlex(cfg.driveMotorCanId, MotorType.kBrushless);
         setPIDValues(driveMotor, cfg.driveP, cfg.driveI, cfg.driveD);
         driveMotor.setInverted(config.driveInverted);
         steerRelativeEncoder = steerMotor.getEncoder();
@@ -87,6 +88,14 @@ public class SwerveModule {
         pidController.setI(integral);
         pidController.setD(derivative);
     }
+
+    private void setPIDValues(CANSparkFlex motor, double proportional, double integral, double derivative) {
+        var pidController = motor.getPIDController();
+        pidController.setP(proportional);
+        pidController.setI(integral);
+        pidController.setD(derivative);
+    }
+    
 
     private void setReferenceAngle(double referenceAngleRadians) {
         steerMotor.getPIDController().setReference(referenceAngleRadians, CANSparkMax.ControlType.kPosition);
