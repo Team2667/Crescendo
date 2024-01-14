@@ -1,8 +1,10 @@
 package frc.robot.subsystems.swerveSupport;
 
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
@@ -17,7 +19,7 @@ import frc.robot.Constants;
 public class SwerveModule {
 
     private RelativeEncoderResetTracker relativeEncoderTracker = new RelativeEncoderResetTracker();
-    private CANCoder absoluteSteerEncoder;
+    private CANcoder absoluteSteerEncoder;
     private CANSparkMax steerMotor;
     private CANSparkFlex driveMotor;
     private RelativeEncoder steerRelativeEncoder;
@@ -65,7 +67,7 @@ public class SwerveModule {
     }
       
     public double getAbsoluteAngle() {
-        double angle = Math.toRadians(absoluteSteerEncoder.getAbsolutePosition());
+        double angle = Math.toRadians(absoluteSteerEncoder.getAbsolutePosition().getValueAsDouble());
         angle %= 2.0 * Math.PI;
         if (angle < 0.0) {
             angle += 2.0 * Math.PI;
@@ -111,14 +113,14 @@ public class SwerveModule {
         steerRelativeEncoder.setPosition(getAbsoluteAngle());
     }
 
-    private CANCoder createAbsoluteCanEncoder(int canId, double radiansOffset) {
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        config.magnetOffsetDegrees = Math.toDegrees(radiansOffset);
-        config.sensorDirection = true;
+    private CANcoder createAbsoluteCanEncoder(int canId, double radiansOffset) {
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        config.MagnetSensor.MagnetOffset = Math.toDegrees(radiansOffset);
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
-        CANCoder encoder = new CANCoder(canId);
-        encoder.configAllSettings(config, 250);
+        CANcoder encoder = new CANcoder(canId);
+        encoder.getConfigurator().apply(config);
         return encoder;
     }
 
