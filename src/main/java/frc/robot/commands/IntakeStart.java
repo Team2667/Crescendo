@@ -9,7 +9,8 @@ public class IntakeStart extends Command{
     // This is the constructor for IntakeStart. Its purpose is
     // to assign values to the class fields. 
     public IntakeStart(Intake intakeParam) {
-        // assin the class field intake to the intake parameter
+        
+        intake=intakeParam;
     }
 
     // Depending on the purpose of a command, the initialize method is used for starting
@@ -17,6 +18,7 @@ public class IntakeStart extends Command{
     // motor.
     @Override
     public void initialize() {
+        intake.start();
 
     }
 
@@ -26,6 +28,6 @@ public class IntakeStart extends Command{
     // ignore it for this implementation.
     @Override
     public void end(boolean isInterrupted) {
-
+        intake.stop();
     }
 }
