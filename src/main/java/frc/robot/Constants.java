@@ -48,4 +48,8 @@ public final class Constants {
 
   public static final double WHEEL_REVOLUTIONS_PER_METER = 3.0;
   public static final double PERCENTAGE_MAX_SPEED = 100.0;
+
+  // Intake constants
+    public static final int INTAKE_MOTOR_CAN_ID = 20;
+    public static final double INTAKE_MOTOR_SPEED = .5;
 }
