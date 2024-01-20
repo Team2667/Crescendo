@@ -43,17 +43,25 @@ public class Lights extends SubsystemBase{
         
     }
 
+    public void paintItUrine() {
+        candle.setLEDs(225,225,20);
+    }
+
+    public void paintItPurblePlace() {
+        candle.setLEDs(255/4,0,255/4);
+    }
+
     private static CANdleConfiguration getLightsOnConfig() {
          CANdleConfiguration config = new CANdleConfiguration();
          config.stripType = LEDStripType.RGB; // set the strip type to RGB
-         config.brightnessScalar = 1.0; // dim the LEDs to half brightness
+         config.brightnessScalar = 0.5; // dim the LEDs to half brightness
          return config;
     }
 
     private static CANdleConfiguration getLightsOffConfig() {
          CANdleConfiguration config = new CANdleConfiguration();
          config.stripType = LEDStripType.RGB; // set the strip type to RGB
-         config.brightnessScalar = 1.0; // dim the LEDs to half brightness
+         config.brightnessScalar = 0.5; // dim the LEDs to half brightness
          return config;
     }
 
