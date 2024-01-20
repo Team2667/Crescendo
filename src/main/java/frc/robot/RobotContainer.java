@@ -22,17 +22,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_exampleSubsystem = new DriveTrain();
+
   private final Intake intake= new Intake();    
   private final IntakeStart intakestart = new IntakeStart(intake);
- 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+    // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
+    configureDriveTrainBindings(Constants.DISABLE_DRIVETRAIN);
+    configureIntakeBindings(Constants.DISABLE_INTAKE);
+    configureCandleBindings(Constants.DISABLE_CANDLE);
   }
 
   /**
@@ -44,15 +46,25 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  //  new Trigger(m_exampleSubsystem::exampleCondition)
-  //      .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-   // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-   m_driverController.a().toggleOnTrue(intakestart);
+  private void configureIntakeBindings(boolean disabled) {
+    if (disabled) {
+      System.out.println("Disabled the Intake system.");
+    } else {
+        m_driverController.a().toggleOnTrue(intakestart);
+    }
+  }
+  private void configureDriveTrainBindings(boolean disabled) {
+    if (disabled) {
+      System.out.println("Disabled the DriveTrain system.");
+    }
+    //thing
+  }
+  private void configureCandleBindings(boolean disabled) {
+    if (disabled) {
+      System.out.println("Disabled the CANdle system.");
+    } else {
+      //thing
+    }
   }
 
   /**
