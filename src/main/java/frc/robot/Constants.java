@@ -48,4 +48,6 @@ public final class Constants {
 
   public static final double WHEEL_REVOLUTIONS_PER_METER = 3.0;
   public static final double PERCENTAGE_MAX_SPEED = 100.0;
+
+  public static final int LIGHT_ID = 31;
 }
