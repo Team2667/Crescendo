@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private DriveTrain m_exampleSubsystem;
+  private DriveTrain drivetrain;
 
   private Intake intake;   
   private IntakeStart intakestart; 
@@ -59,7 +59,7 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the DriveTrain system.");
     } else {
-      m_exampleSubsystem= new DriveTrain();
+      drivetrain= new DriveTrain();
     }
   }
   private void configureCandleBindings(boolean disabled) {
