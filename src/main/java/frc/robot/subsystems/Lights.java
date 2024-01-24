@@ -44,11 +44,11 @@ public class Lights extends SubsystemBase{
     }
 
     public void paintItUrine() {
-        candle.setLEDs(225,225,20);
+        candle.setLEDs(225/Constants.BRIGHTNESS_DIVISOR,225/Constants.BRIGHTNESS_DIVISOR,20/Constants.BRIGHTNESS_DIVISOR);
     }
 
     public void paintItPurblePlace() {
-        candle.setLEDs(255/4,0,255/4);
+        candle.setLEDs(255/Constants.BRIGHTNESS_DIVISOR,0,255/Constants.BRIGHTNESS_DIVISOR);
     }
 
     private static CANdleConfiguration getLightsOnConfig() {

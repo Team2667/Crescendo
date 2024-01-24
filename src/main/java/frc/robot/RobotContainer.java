@@ -24,10 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DriveTrain drivetrain;
- // private final DriveTrain m_exampleSubsystem = new DriveTrain();
-  private final Lights candle = new Lights();
-  private final Lighter redcandle = new Lighter(candle,1);
-  private final Lighter bluecandle = new Lighter(candle,2);
+  private Lights candle;    
+  private Lighter redcandle ;
+  private Lighter bluecandle;
 
   private Intake intake;   
   private IntakeStart intakestart; 
@@ -58,7 +57,7 @@ public class RobotContainer {
     } else {
         this.intake = new Intake(); 
         this.intakestart = new IntakeStart(intake);
-        m_driverController.a().toggleOnTrue(intakestart);
+        m_driverController.x().toggleOnTrue(intakestart);
     }
   }
   private void configureDriveTrainBindings(boolean disabled) {
@@ -72,19 +71,12 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the CANdle system.");
     } else {
-      //thing
+      this.candle = new Lights();
+      this.redcandle= new Lighter(candle,1);
+      this.bluecandle= new Lighter(candle,2);
+      m_driverController.a().whileTrue(redcandle);
+      m_driverController.b().whileTrue(bluecandle);
     }
-  }
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  //  new Trigger(m_exampleSubsystem::exampleCondition)
-  //      .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-   // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-   m_driverController.a().whileTrue(redcandle);
-   m_driverController.b().whileTrue(bluecandle);
   }
 
   /**
