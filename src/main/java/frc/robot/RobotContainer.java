@@ -59,7 +59,7 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the DriveTrain system.");
     } else {
-      drivetrain= new DriveTrain();
+      this.drivetrain= new DriveTrain();
     }
   }
   private void configureCandleBindings(boolean disabled) {
