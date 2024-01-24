@@ -17,7 +17,7 @@ public class Lighter extends Command {
     @Override
     public void execute() {
         if (thingy==1) {
-            lighter.paintItUrine();();
+            lighter.paintItUrine();
         } else if (thingy==2) {
             lighter.paintItPurblePlace();
         }

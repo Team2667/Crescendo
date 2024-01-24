@@ -74,6 +74,7 @@ public class RobotContainer {
     } else {
       //thing
     }
+  }
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
   //  new Trigger(m_exampleSubsystem::exampleCondition)
