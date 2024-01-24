@@ -51,10 +51,10 @@ public final class Constants {
 
   // Intake constants
     public static final int INTAKE_MOTOR_CAN_ID = 20;
-    public static final double INTAKE_MOTOR_SPEED = .5;
+    public static final double INTAKE_MOTOR_SPEED = .1;
 
   //Make stuff stop working so errors dont make the drivers whine
-    public static final boolean DISABLE_INTAKE = true;
-    public static final boolean DISABLE_DRIVETRAIN = false;
+    public static final boolean DISABLE_INTAKE = false;
+    public static final boolean DISABLE_DRIVETRAIN = true;
     public static final boolean DISABLE_CANDLE = true;
 }

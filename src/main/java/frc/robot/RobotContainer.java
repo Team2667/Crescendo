@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_exampleSubsystem = new DriveTrain();
+  private DriveTrain m_exampleSubsystem;
 
-  private final Intake intake= new Intake();    
-  private final IntakeStart intakestart = new IntakeStart(intake);
+  private Intake intake;   
+  private IntakeStart intakestart; 
     // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -50,14 +50,17 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the Intake system.");
     } else {
+        this.intake = new Intake(); 
+        this.intakestart = new IntakeStart(intake);
         m_driverController.a().toggleOnTrue(intakestart);
     }
   }
   private void configureDriveTrainBindings(boolean disabled) {
     if (disabled) {
       System.out.println("Disabled the DriveTrain system.");
+    } else {
+      m_exampleSubsystem= new DriveTrain();
     }
-    //thing
   }
   private void configureCandleBindings(boolean disabled) {
     if (disabled) {
