@@ -48,8 +48,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_DriveTrain=new DriveTrain();
-    m_DriveTrain.setDefaultCommand(new DefaultDriveCommand(m_DriveTrain,
+    drivetrain=new DriveTrain();
+    drivetrain.setDefaultCommand(new DefaultDriveCommand(drivetrain,
     () -> -modifyAxis(m_controller.getLeftY()),
     () -> modifyAxis(m_controller.getLeftX()),
     () -> -modifyAxis(m_controller.getRightX())
@@ -87,20 +87,25 @@ public class RobotContainer {
       return Math.copySign(input * input, input);
     }
 
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  //  new Trigger(m_exampleSubsystem::exampleCondition)
-  //      .onTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configureIntakeBindings(boolean disabled) {
+    if (disabled) {
+      System.out.println("Disabled the Intake system.");
+    } else {
+        this.intake = new Intake(); 
+        this.intakestart = new IntakeStart(intake);
+        m_driverController.leftBumper().toggleOnTrue(intakestart);
+    }
+  }
+  private void configureDriveTrainBindings(boolean disabled) {
+    if (disabled) {
+      System.out.println("Disabled the DriveTrain system.");
+    } else {
+      forwardCommand=new DriveFieldRelative(drivetrain, 0, 1);
+      backCommand =new DriveFieldRelative(drivetrain, Math.PI, 1);
+      leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3)/4, 1);
+      rightCommand =new DriveFieldRelative(drivetrain, Math.PI / 2, 1);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-   // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-   //m_driverController.a().toggleOnTrue(intakestart);
-   forwardCommand=new DriveFieldRelative(m_DriveTrain, 0, 1);
-   backCommand =new DriveFieldRelative(m_DriveTrain, Math.PI, 1);
-   leftCommand = new DriveFieldRelative(m_DriveTrain, (2 * Math.PI * 3)/4, 1);
-   rightCommand =new DriveFieldRelative(m_DriveTrain, Math.PI / 2, 1);
-         JoystickButton forwardCommandButton=new JoystickButton(m_controller, XboxController.Button.kY.value);
+      JoystickButton forwardCommandButton=new JoystickButton(m_controller, XboxController.Button.kY.value);
       forwardCommandButton.whileTrue(forwardCommand);
       JoystickButton leftCommandButton=new JoystickButton(m_controller, XboxController.Button.kX.value);
       leftCommandButton.whileTrue(leftCommand);
@@ -108,20 +113,6 @@ public class RobotContainer {
       downCommandButton.whileTrue(backCommand);
       JoystickButton rightCommandButton=new JoystickButton(m_controller, XboxController.Button.kB.value);
       rightCommandButton.whileTrue(rightCommand);
-  private void configureIntakeBindings(boolean disabled) {
-    if (disabled) {
-      System.out.println("Disabled the Intake system.");
-    } else {
-        this.intake = new Intake(); 
-        this.intakestart = new IntakeStart(intake);
-        m_driverController.x().toggleOnTrue(intakestart);
-    }
-  }
-  private void configureDriveTrainBindings(boolean disabled) {
-    if (disabled) {
-      System.out.println("Disabled the DriveTrain system.");
-    } else {
-      this.drivetrain= new DriveTrain();
     }
   }
   private void configureCandleBindings(boolean disabled) {

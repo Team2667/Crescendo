@@ -62,8 +62,6 @@ public final class Constants {
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
-  public static final double INTAKE_MOTOR_SPEED = 0;
-public static final int INTAKE_MOTOR_CAN_ID = 0;
 }
 
 /*Whohahahao
