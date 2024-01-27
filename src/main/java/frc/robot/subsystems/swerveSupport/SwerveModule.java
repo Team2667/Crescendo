@@ -66,11 +66,11 @@ public class SwerveModule {
     }
       
     public double getAbsoluteAngle() {
-        double angle = Math.toRadians(absoluteSteerEncoder.getAbsolutePosition().getValueAsDouble());
-        angle %= 2.0 * Math.PI;
-        if (angle < 0.0) {
-            angle += 2.0 * Math.PI;
-        }
+        double angle = (absoluteSteerEncoder.getAbsolutePosition().getValueAsDouble())*2*Math.PI;
+       // angle %= 2.0 * Math.PI;
+       // if (angle < 0.0) {
+       //     angle += 2.0 * Math.PI;
+       // }
         return angle;
     }
 
@@ -112,13 +112,14 @@ public class SwerveModule {
         steerRelativeEncoder.setPosition(getAbsoluteAngle());
     }
 
-    private CANcoder createAbsoluteCanEncoder(int canId, double radiansOffset) {
+    private CANcoder createAbsoluteCanEncoder(int canId, double offset) {
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-        config.MagnetSensor.MagnetOffset = Math.toDegrees(radiansOffset);
+        config.MagnetSensor.MagnetOffset = offset;
         config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
         CANcoder encoder = new CANcoder(canId);
+        
         encoder.getConfigurator().apply(config);
         return encoder;
     }

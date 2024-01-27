@@ -20,8 +20,8 @@ public final class Constants {
    *
    * Should be measured from center to center.
    */
-
-   public static final int PigeonId=69;
+  private static final double pi=3.141592;
+   public static final int PigeonId=31;
   public static final double DRIVETRAIN_WHEELBASE_METERS = 1.0;
   public static final double MAX_INPUT_SPEED = 1; //4.14528;
 
@@ -29,27 +29,25 @@ public final class Constants {
   public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
   public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
   public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 14;
-  public static final double FRONT_LEFT_MODULE_STEER_OFFSET = 4.344234 +Math.PI;
+  public static final double FRONT_LEFT_MODULE_STEER_OFFSET =-0.04052734375;
 
   public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 5;
   public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 6;
   public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 12;
-  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = 0.794602;
+  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -0.199462890625;
 
   public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 3;
   public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4;
   public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
-  public static final double BACK_LEFT_MODULE_STEER_OFFSET = 3.393166 +Math.PI;
+  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -0.350830078125;
 
   public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 7;
   public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 8;
   public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13;
-  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = 1.583068;
+  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -0.044921875;
 
   public static final double WHEEL_REVOLUTIONS_PER_METER = 3.0;
   public static final double PERCENTAGE_MAX_SPEED = 100.0;
-
-  // Intake constants
-    public static final int INTAKE_MOTOR_CAN_ID = 20;
-    public static final double INTAKE_MOTOR_SPEED = .5;
+  public static final double INTAKE_MOTOR_SPEED = 0;
+public static final int INTAKE_MOTOR_CAN_ID = 0;
 }
