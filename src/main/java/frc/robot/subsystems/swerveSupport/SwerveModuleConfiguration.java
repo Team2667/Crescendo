@@ -48,7 +48,6 @@ public class SwerveModuleConfiguration {
         moduleConfig.driveMotorCanId = Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR;
         moduleConfig.revolutionsPerMeter = Constants.WHEEL_REVOLUTIONS_PER_METER;
         moduleConfig.label = "Front Right";
-        moduleConfig.driveInverted = true;
 
         return moduleConfig;
     }
@@ -61,6 +60,7 @@ public class SwerveModuleConfiguration {
         moduleConfig.driveMotorCanId = Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR;
         moduleConfig.revolutionsPerMeter = Constants.WHEEL_REVOLUTIONS_PER_METER;
         moduleConfig.label = "Back Right";
+        moduleConfig.driveInverted=true;
         return moduleConfig;
     }
 
