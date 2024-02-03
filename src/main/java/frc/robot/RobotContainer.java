@@ -101,10 +101,10 @@ public class RobotContainer {
     () -> modifyAxis(m_controller.getLeftX()),
     () -> -modifyAxis(m_controller.getRightX())
   ));
-      forwardCommand=new DriveFieldRelative(drivetrain, 0, 1);
-      backCommand =new DriveFieldRelative(drivetrain, Math.PI, 1);
-      leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3)/4, 1);
-      rightCommand =new DriveFieldRelative(drivetrain, Math.PI / 2, 1);
+      forwardCommand=new DriveFieldRelative(drivetrain, 0, .5);
+      backCommand =new DriveFieldRelative(drivetrain, Math.PI, .5);
+      leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3)/4, .5);
+      rightCommand =new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
 
       JoystickButton forwardCommandButton=new JoystickButton(m_controller, XboxController.Button.kY.value);
       forwardCommandButton.whileTrue(forwardCommand);
@@ -134,8 +134,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-  //  return Autos.exampleAuto(m_exampleSubsystem);
-  return null;
+    Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
+    return driveBackward.withTimeout(3.0);
   }
 }
