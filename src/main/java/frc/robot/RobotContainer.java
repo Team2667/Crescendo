@@ -48,12 +48,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    drivetrain=new DriveTrain();
-    drivetrain.setDefaultCommand(new DefaultDriveCommand(drivetrain,
-    () -> -modifyAxis(m_controller.getLeftY()),
-    () -> modifyAxis(m_controller.getLeftX()),
-    () -> -modifyAxis(m_controller.getRightX())
-  ));
+ 
     // Configure the trigger bindings
     configureDriveTrainBindings(Constants.DISABLE_DRIVETRAIN);
     configureIntakeBindings(Constants.DISABLE_INTAKE);
@@ -100,6 +95,12 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the DriveTrain system.");
     } else {
+    drivetrain=new DriveTrain();
+    drivetrain.setDefaultCommand(new DefaultDriveCommand(drivetrain,
+    () -> -modifyAxis(m_controller.getLeftY()),
+    () -> modifyAxis(m_controller.getLeftX()),
+    () -> -modifyAxis(m_controller.getRightX())
+  ));
       forwardCommand=new DriveFieldRelative(drivetrain, 0, 1);
       backCommand =new DriveFieldRelative(drivetrain, Math.PI, 1);
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3)/4, 1);
