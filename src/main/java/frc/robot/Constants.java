@@ -52,12 +52,12 @@ public final class Constants {
   public static final int LIGHT_ID = 31;
 
   // Intake constants
-    public static final int INTAKE_MOTOR_CAN_ID = 12;
-    public static final double INTAKE_MOTOR_SPEED = .1;
+    public static final int INTAKE_MOTOR_CAN_ID = 15;
+    public static final double INTAKE_MOTOR_SPEED = .5;
 
   //Make stuff stop working so errors dont make the drivers whine
     public static final boolean DISABLE_INTAKE = false;
-    public static final boolean DISABLE_DRIVETRAIN = true;
+    public static final boolean DISABLE_DRIVETRAIN = false;
     public static final boolean DISABLE_CANDLE = false;
 
   //stop blinding kent
