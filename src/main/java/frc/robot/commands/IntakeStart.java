@@ -9,7 +9,8 @@ public class IntakeStart extends Command{
     // This is the constructor for IntakeStart. Its purpose is
     // to assign values to the class fields. 
     public IntakeStart(Intake intakeParam) {
-        
+        //TODO: add intake as a requirement for this com.sun.media.sound
+        // See https://github.wpilib.org/allwpilib/docs/beta/java/edu/wpi/first/wpilibj2/command/Command.html#addRequirements(edu.wpi.first.wpilibj2.command.Subsystem...) 
         intake=intakeParam;
     }
 
@@ -18,8 +19,16 @@ public class IntakeStart extends Command{
     // motor.
     @Override
     public void initialize() {
+        // TODO: enable the forward limit switch
+    
         intake.start();
 
+    }
+
+    @Override
+    public boolean isFinished() {
+        // TODO: Return true if the limit switch is enganged, false otherwise.
+        return false;
     }
 
     // End methods do everything necessary to end a command. Typically this means

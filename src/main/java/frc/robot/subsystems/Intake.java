@@ -26,4 +26,22 @@ public class Intake extends SubsystemBase{
     public void stop() {
         intakeMotor.stopMotor();
     }
+
+    public void enableLimitSwitch() {
+        // TODO: turn the limit switch on for the intake motor. 
+        // See https://codedocs.revrobotics.com/java/com/revrobotics/cansparkbase#getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type)
+        //
+    }
+
+    public void disableLimitSwitch() {
+        // TODO: turn the limit switch on for the intake motor. 
+        // See https://codedocs.revrobotics.com/java/com/revrobotics/cansparkbase#getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type)
+        //
+    }
+
+    public boolean isLimitSwitchEngaged() {
+        // TODO: Return true if the limit switch is turned on, false otherwise
+        // See https://codedocs.revrobotics.com/java/com/revrobotics/cansparkbase#getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type)
+        return false;
+    }
 }

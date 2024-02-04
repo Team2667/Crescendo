@@ -55,10 +55,14 @@ public final class Constants {
     public static final int INTAKE_MOTOR_CAN_ID = 15;
     public static final double INTAKE_MOTOR_SPEED = .5;
 
+  // Launcher constants
+  // TODO: Add launcher constants
+
   //Make stuff stop working so errors dont make the drivers whine
     public static final boolean DISABLE_INTAKE = false;
     public static final boolean DISABLE_DRIVETRAIN = false;
-    public static final boolean DISABLE_CANDLE = false;
+    public static final boolean DISABLE_CANDLE = true;
+    public static final boolean DISABLE_LAUNCHER = false;
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
