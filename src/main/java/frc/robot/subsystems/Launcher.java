@@ -1,22 +1,27 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase{
-    private CANSparkFlex topWheel;
-    private CANSparkFlex bottomWheel;
+    private CANSparkFlex frontWheel;
+    private CANSparkFlex backWheel;
 
     public Launcher() {
-        // TODO initialize topWheel and bottomWheel
+        frontWheel=new CANSparkFlex(Constants.LAUNCHER_WHEEL_FRONT, MotorType.kBrushless);
+        backWheel=new CANSparkFlex(Constants.LAUNCHER_WHEEL_BACK, MotorType.kBrushless);
     }
 
     public void launchToSpeaker() {
-        // TODO: Start the top and bottom moters at a speed to fire the
-        // note into the speaker
+        frontWheel.set(0.3);
+        backWheel.set(0.3);
     }
 
     public void stop() {
-        // TODO: stop the motors
+        frontWheel.stopMotor();
+        backWheel.stopMotor();
     }
 }
