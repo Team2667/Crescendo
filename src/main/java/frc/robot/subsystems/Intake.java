@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase{
     public void stop() {
         intakeMotor.stopMotor();
     }
-
+    //Am I the Harvard Science Center or what because my code is fire
     public void enableLimitSwitch() { //make the feed start sneeding(detecting limit switch in normal human terms)
         SparkLimitSwitch sneed = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
         sneed.enableLimitSwitch(true);
