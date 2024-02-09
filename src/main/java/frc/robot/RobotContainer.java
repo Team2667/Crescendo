@@ -16,6 +16,7 @@ import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -47,6 +48,7 @@ public class RobotContainer {
 
   private Intake intake;
   private IntakeStart intakestart;
+  private Launcher launcher;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -113,6 +115,7 @@ public class RobotContainer {
       System.out.println("Disabled the launcher subsystem");
       return;
     }
+    launcher=new Launcher();
     // TODO: create a member variable for the Launcher subsystem. Initialize that member variable to a new instance of Launcher
     // TODO: Create a member variable for the LaunchNote command. Initialize that member variable to a new instance of LaunchNote
   }
@@ -160,6 +163,9 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled compound commands");
     }
+
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(0.5)
+      .andThen(new LaunchNote(launcher).alongWith(new FeedNoteToLauncher(intake))).withTimeout(2));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
