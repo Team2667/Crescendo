@@ -25,7 +25,7 @@ public final class Constants {
   public static final double DRIVETRAIN_WHEELBASE_METERS = 1.0;
   public static final double MAX_INPUT_SPEED = 1; //4.14528;
 
-
+  // CANIDS
   public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
   public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
   public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 14;
@@ -50,6 +50,9 @@ public final class Constants {
   public static final double PERCENTAGE_MAX_SPEED = 100.0;
 
   public static final int LIGHT_ID = 31;
+
+  public static final int LAUNCHER_WHEEL_FRONT=51;
+  public static final int LAUNCHER_WHEEL_BACK=50;
 
   // Intake constants
     public static final int INTAKE_MOTOR_CAN_ID = 15;
