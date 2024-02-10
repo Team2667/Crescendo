@@ -66,6 +66,7 @@ public class RobotContainer {
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    populateMailbox();
   }
 
   /**
@@ -177,10 +178,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
-    return driveBackward.withTimeout(1);
-  }
+
   private void populateMailbox()
   {
      mailman.addOption("leunch",
@@ -188,3 +186,6 @@ public class RobotContainer {
     );
   }
 }
+  public Command getAutonomousCommand(){
+    return mailman.getSelected();
+  }
