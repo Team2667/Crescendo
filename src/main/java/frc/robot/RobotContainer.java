@@ -18,6 +18,7 @@ import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -45,10 +46,10 @@ public class RobotContainer {
   private Lights candle;
   private Lighter redcandle;
   private Lighter bluecandle;
-
   private Intake intake;
   private IntakeStart intakestart;
   private Launcher launcher;
+  private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -179,5 +180,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
     return driveBackward.withTimeout(1);
+  }
+  private void populateMailbox()
+  {
+     mailman.addOption("leunch",
+    new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6)
+    );
   }
 }
