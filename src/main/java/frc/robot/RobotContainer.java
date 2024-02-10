@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
@@ -43,8 +44,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private DriveTrain drivetrain;
   private Lights candle;
-  private Lighter redcandle;
-  private Lighter bluecandle;
+  private IndicateNote notelight;
 
   private Intake intake;
   private IntakeStart intakestart;
@@ -150,8 +150,7 @@ public class RobotContainer {
       System.out.println("Disabled the CANdle system.");
     } else {
       this.candle = new Lights();
-      //TODO: create a mber variable for IndicateNote and assign it to a new instance of IndicateNote. The second parameter
-      // Will be ()-> intake.isLimitSwitchEngaged()      
+      this.notelight = new IndicateNote(candle, ()->intake.isLimitSwitchEngaged());
     }
   }
 
