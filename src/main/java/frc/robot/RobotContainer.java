@@ -164,8 +164,8 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(0.5)
-      .andThen(new LaunchNote(launcher).alongWith(new FeedNoteToLauncher(intake))).withTimeout(2));
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(Constants.spinuptime)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(4));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
@@ -178,6 +178,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
-    return driveBackward.withTimeout(3.0);
+    return driveBackward.withTimeout(1);
   }
 }

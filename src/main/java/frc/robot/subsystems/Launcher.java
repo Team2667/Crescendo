@@ -19,6 +19,17 @@ public class Launcher extends SubsystemBase{
         frontWheel.set(0.3);
         backWheel.set(0.3);
     }
+    public void frenchMode()
+    {
+        frontWheel.set(1);
+        backWheel.set(1);
+    }
+    public void romanian()
+    {
+         frontWheel.set(0.1);
+        backWheel.set(0.1);
+        
+    }
 
     public void stop() {
         frontWheel.stopMotor();

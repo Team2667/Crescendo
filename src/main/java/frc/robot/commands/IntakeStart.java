@@ -28,7 +28,7 @@ public class IntakeStart extends Command{
     @Override
     public boolean isFinished() {
         // TODO: Return true if the limit switch is engaged, false otherwise.
-        return false;
+        return intake.isLimitSwitchEngaged();
     }
 
     // End methods do everything necessary to end a command. Typically this means

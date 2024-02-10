@@ -56,7 +56,7 @@ public final class Constants {
 
   // Intake constants
     public static final int INTAKE_MOTOR_CAN_ID = 15;
-    public static final double INTAKE_MOTOR_SPEED = .5;
+    public static final double INTAKE_MOTOR_SPEED = 1;
 
   // Launcher constants
   // TODO: Add launcher constants
@@ -69,6 +69,7 @@ public final class Constants {
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
+    public static double spinuptime=2;
 }
 
 /*Whohahahao
