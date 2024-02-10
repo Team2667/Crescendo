@@ -150,10 +150,6 @@ public class RobotContainer {
       System.out.println("Disabled the CANdle system.");
     } else {
       this.candle = new Lights();
-      this.redcandle = new Lighter(candle, 1);
-      this.bluecandle = new Lighter(candle, 2);
-      m_driverController.a().whileTrue(redcandle);
-      m_driverController.b().whileTrue(bluecandle);
       //TODO: create a mber variable for IndicateNote and assign it to a new instance of IndicateNote. The second parameter
       // Will be ()-> intake.isLimitSwitchEngaged()      
     }

@@ -5,18 +5,21 @@ import frc.robot.subsystems.Lights;
 
 public class IndicateNote extends Command {
     BooleanFunc isNoteCaptured;
+    Lights lights;
 
 
     public IndicateNote(Lights lights, BooleanFunc isNoteCaptured) {
-        // TODO: Add lights as a requirement for this command.
-        // TODO: make this the default command for lights.
-        // Create a member variable of type Lights and assign it the value of the lights parameter
-
+        this.lights=lights;
+        lights.setDefaultCommand(this);
     }
 
     @Override
     public void execute() {
-        // isNoteCaptured.test() is true, turn lights on, otherwise turn lights off
+        if (isNoteCaptured.test()) {
+            lights.paintItUrine();
+        } else {
+            lights.paintItBlack();
+        }
     }
     
     @Override
