@@ -20,12 +20,25 @@ public class Intake extends SubsystemBase{
         intakeMotor= new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);        
     }
     public void start() {
+        undoLimitSwitchTrickery();
         intakeMotor.set(-Constants.INTAKE_MOTOR_SPEED);
     }
 
     public void stop() {
         intakeMotor.stopMotor();
     }
+
+    public void limitSwitchTrickery() {
+        intakeMotor.setInverted(true);
+        SparkLimitSwitch sneed = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        sneed.enableLimitSwitch(true);
+    }
+    public void undoLimitSwitchTrickery() {
+        intakeMotor.setInverted(false);
+        SparkLimitSwitch sneed = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        sneed.enableLimitSwitch(false);
+    }
+
     
     //Am I the Harvard Science Center or what because my code is fire
     public void enableLimitSwitch() { //make the feed start sneeding(detecting limit switch in normal human terms)

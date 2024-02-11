@@ -38,5 +38,6 @@ public class IntakeStart extends Command{
     @Override
     public void end(boolean isInterrupted) {
         intake.stop();
+        intake.limitSwitchTrickery();
     }
 }
