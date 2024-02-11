@@ -10,6 +10,8 @@ public class IndicateNote extends Command {
 
     public IndicateNote(Lights lights, BooleanFunc isNoteCaptured) {
         this.lights=lights;
+        this.isNoteCaptured=isNoteCaptured;
+        this.addRequirements(lights);
         lights.setDefaultCommand(this);
     }
 
