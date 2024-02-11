@@ -105,7 +105,6 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the Intake system.");
     } else {
-      //TODO: Create a member variable for a FeedNoteToLauncher command. Initialize that member variable variable to a new instance of FeedNoteToLauncher.
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake);
       m_driverController.leftBumper().toggleOnTrue(intakestart);
@@ -118,8 +117,7 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
-    // TODO: create a member variable for the Launcher subsystem. Initialize that member variable to a new instance of Launcher
-    // TODO: Create a member variable for the LaunchNote command. Initialize that member variable to a new instance of LaunchNote
+
   }
 
   private void configureDriveTrainBindings(boolean disabled) {
@@ -156,8 +154,7 @@ public class RobotContainer {
       this.bluecandle = new Lighter(candle, 2);
       m_driverController.a().whileTrue(redcandle);
       m_driverController.b().whileTrue(bluecandle);
-      //TODO: create a mber variable for IndicateNote and assign it to a new instance of IndicateNote. The second parameter
-      // Will be ()-> intake.isLimitSwitchEngaged()      
+   
     }
   }
 
@@ -168,9 +165,6 @@ public class RobotContainer {
 
     m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(Constants.spinuptime)
       .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(4));
-    // TODO: Bind a command to the right bumper that:
-    // 1. Runs LaunchNote for .5 secons.
-    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
   }
 
   /**
@@ -181,11 +175,16 @@ public class RobotContainer {
 
   private void populateMailbox()
   {
+    mailman=new SendableChooser<>();
      mailman.addOption("leunch",
     new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6)
     );
-  }
-}
-  public Command getAutonomousCommand(){
+    mailman.addOption("actual autonommouse we be usin", 
+    new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2)
+    .andThen(backCommand.withTimeout(1))
+    );
+    }
+    public Command getAutonomousCommand(){
     return mailman.getSelected();
   }
+}
