@@ -12,6 +12,7 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase{
     private CANSparkMax intakeMotor;
+    private boolean hasnote=false;
 
     // This is the constructor for the Intake subsystem. Its purpose is to initialize
     // class fields which will be used by other methods in this class.
@@ -19,25 +20,18 @@ public class Intake extends SubsystemBase{
     public Intake(){
         intakeMotor= new CANSparkMax(Constants.INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);        
     }
-    public void start() {
-        undoLimitSwitchTrickery();
-        intakeMotor.set(-Constants.INTAKE_MOTOR_SPEED);
+    public void start(double speed) {
+        intakeMotor.set(-speed);
+    }
+    public void startReverse() {
+        intakeMotor.set(0.1);
     }
 
     public void stop() {
         intakeMotor.stopMotor();
     }
 
-    public void limitSwitchTrickery() {
-        intakeMotor.setInverted(true);
-        SparkLimitSwitch sneed = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        sneed.enableLimitSwitch(true);
-    }
-    public void undoLimitSwitchTrickery() {
-        intakeMotor.setInverted(false);
-        SparkLimitSwitch sneed = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        sneed.enableLimitSwitch(false);
-    }
+   
 
     
     //Am I the Harvard Science Center or what because my code is fire

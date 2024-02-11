@@ -11,6 +11,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
+import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
@@ -105,8 +106,9 @@ public class RobotContainer {
     } else {
       //TODO: Create a member variable for a FeedNoteToLauncher command. Initialize that member variable variable to a new instance of FeedNoteToLauncher.
       this.intake = new Intake();
-      this.intakestart = new IntakeStart(intake);
-      m_driverController.leftBumper().toggleOnTrue(intakestart);
+      this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
+      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.1)));
+      m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
 
