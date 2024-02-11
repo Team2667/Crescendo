@@ -107,7 +107,7 @@ public class RobotContainer {
       //TODO: Create a member variable for a FeedNoteToLauncher command. Initialize that member variable variable to a new instance of FeedNoteToLauncher.
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.1)));
+      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
       m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }

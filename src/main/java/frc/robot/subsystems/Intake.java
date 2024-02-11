@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase{
         intakeMotor.set(-speed);
     }
     public void startReverse() {
-        intakeMotor.set(0.1);
+        intakeMotor.set(0.5);
     }
 
     public void stop() {
