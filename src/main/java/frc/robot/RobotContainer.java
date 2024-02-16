@@ -6,11 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
+import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
@@ -44,8 +46,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private DriveTrain drivetrain;
   private Lights candle;
-  private Lighter redcandle;
-  private Lighter bluecandle;
+  private IndicateNote notelight;
   private Intake intake;
   private IntakeStart intakestart;
   private Launcher launcher;
@@ -106,8 +107,9 @@ public class RobotContainer {
       System.out.println("Disabled the Intake system.");
     } else {
       this.intake = new Intake();
-      this.intakestart = new IntakeStart(intake);
-      m_driverController.leftBumper().toggleOnTrue(intakestart);
+      this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
+      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
+      m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
 
@@ -150,11 +152,8 @@ public class RobotContainer {
       System.out.println("Disabled the CANdle system.");
     } else {
       this.candle = new Lights();
-      this.redcandle = new Lighter(candle, 1);
-      this.bluecandle = new Lighter(candle, 2);
-      m_driverController.a().whileTrue(redcandle);
-      m_driverController.b().whileTrue(bluecandle);
-   
+      this.notelight = new IndicateNote(candle, ()->intake.isLimitSwitchEngaged());
+
     }
   }
 
@@ -164,7 +163,10 @@ public class RobotContainer {
     }
 
     m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(Constants.spinuptime)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(4));
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(2));
+    // TODO: Bind a command to the right bumper that:
+    // 1. Runs LaunchNote for .5 secons.
+    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
   }
 
   /**

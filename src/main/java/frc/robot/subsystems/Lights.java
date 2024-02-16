@@ -4,6 +4,7 @@ import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdleConfiguration;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -11,12 +12,11 @@ public class Lights extends SubsystemBase{
     private CANdle candle;
     private CANdleConfiguration lightsOnConfig = getLightsOnConfig();
     private CANdleConfiguration lightsOffConfig = getLightsOffConfig();
-    
-    
     // This is the constructor for lights Its purpose is to inialize the class fields.
     public Lights() {
         candle=new CANdle(Constants.LIGHT_ID);
         candle.setLEDs(0,0,0,0,Constants.LIGHT_ID,1);
+
         // initialize the candle class field
         // You will need to add a valuie to constants
     }

@@ -32,7 +32,6 @@ public class DefaultDriveCommand extends Command {
 
     @Override
     public void execute() {
-        // TODO: You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                  ChassisSpeeds.fromFieldRelativeSpeeds(
                          xSRL.calculate(m_translationXSupplier.getAsDouble()),
