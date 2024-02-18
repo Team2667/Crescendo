@@ -13,6 +13,7 @@ import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
+import frc.robot.commands.IntakeReverseRegardless;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
@@ -108,7 +109,7 @@ public class RobotContainer {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
       m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
-      m_driverController.back().whileTrue(new IntakeReverse(intake));
+      m_driverController.back().whileTrue(new IntakeReverseRegardless(intake));
     }
   }
 
@@ -174,7 +175,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
-    return driveBackward.withTimeout(1);
+  //  Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
+ //   return driveBackward.withTimeout(1);
+ return null;
   }
 }

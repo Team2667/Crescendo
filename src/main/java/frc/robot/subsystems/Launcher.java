@@ -16,8 +16,8 @@ public class Launcher extends SubsystemBase{
     }
 
     public void launchToSpeaker() {
-        frontWheel.set(0.3);
-        backWheel.set(0.3);
+        frontWheel.set(0.5); //was 0.3
+        backWheel.set(0.5);
     }
     public void frenchMode()
     {
