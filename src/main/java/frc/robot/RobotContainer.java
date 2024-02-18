@@ -119,6 +119,8 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
+    m_driverController.start().toggleOnTrue(new LaunchNote(launcher));
+
 
   }
 
@@ -162,8 +164,8 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(Constants.spinuptime)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(2));
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(4)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(7));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons

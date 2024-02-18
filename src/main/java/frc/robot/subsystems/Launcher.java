@@ -18,11 +18,13 @@ public class Launcher extends SubsystemBase{
     private RelativeEncoder backEncoder;
     private SparkPIDController frontPID;
     private SparkPIDController rearPID;
-    private double pV = 4e-1;
-	private double iV = 0;
+    private double pV = 0.0008;
+	private double iV = 0.0000004;
     private double dV = 0;
-    private double rearspeed;
-    private double frontspeed;
+    public double rearspeed=1960;
+    public double frontspeed=1960;
+
+    private boolean firstcycle=false;
 
     public Launcher() {
         frontWheel=new CANSparkFlex(Constants.LAUNCHER_WHEEL_FRONT, MotorType.kBrushless);
@@ -31,6 +33,10 @@ public class Launcher extends SubsystemBase{
         backEncoder=backWheel.getEncoder();
         frontPID=frontWheel.getPIDController();
         rearPID=backWheel.getPIDController();
+
+    }
+    public void setPIDvals()
+    {
         frontPID.setP(pV);
         frontPID.setI(iV);
         frontPID.setD(dV);
@@ -38,10 +44,7 @@ public class Launcher extends SubsystemBase{
         rearPID.setP(pV);
         rearPID.setI(iV);
         rearPID.setD(dV);
-        
-
     }
-
     public void setSpeedPid(double front, double rear)
     {
         frontPID.setReference(front, CANSparkBase.ControlType.kVelocity);
@@ -50,9 +53,8 @@ public class Launcher extends SubsystemBase{
     }
 
     public void launchToSpeaker() {
-        frontWheel.set(0.3);
-        backWheel.set(0.3);
-    
+        setSpeedPid(frontspeed, rearspeed);
+
     }
     public void frenchMode()
     {
@@ -63,9 +65,16 @@ public class Launcher extends SubsystemBase{
     {
          frontWheel.set(0.1);
         backWheel.set(0.1);
-        
     }
 
+    public double getFrontVelocity()
+    {
+        return frontEncoder.getVelocity();
+    }
+    public double getBackVelocity()
+    {
+        return backEncoder.getVelocity();
+    }
     public void stop() {
         frontWheel.stopMotor();
         backWheel.stopMotor();
@@ -73,8 +82,35 @@ public class Launcher extends SubsystemBase{
     @Override
     public void periodic()
     {
-        SmartDashboard.putNumber("front wheel",frontEncoder.getVelocity());
-        SmartDashboard.putNumber("rear wheel",backEncoder.getVelocity());
+        if(Constants.debuggymodey)
+        {
 
+            double sp=SmartDashboard.getNumber("pV",pV);
+            double si=SmartDashboard.getNumber("iV", iV);
+            double sd=SmartDashboard.getNumber("dV", dV);
+            double vfront=SmartDashboard.getNumber("front velocity", frontspeed);
+            double vrear=SmartDashboard.getNumber("rear velocity", rearspeed);
+
+
+            if(sp!=pV || si!=iV || sd!=dV || vfront!=frontspeed || vrear!=rearspeed)
+            {
+                pV=sp;
+                iV=si;
+                dV=sd;
+                rearspeed=vrear;
+                frontspeed=vfront;
+                setPIDvals();
+            }
+            SmartDashboard.putNumber("pV", pV);
+            SmartDashboard.putNumber("iV", iV);
+            SmartDashboard.putNumber("dV", dV);
+            SmartDashboard.putNumber("front velocity", frontspeed);
+            SmartDashboard.putNumber("rear velocity", rearspeed);
+            SmartDashboard.putNumber("front velocity real", frontEncoder.getVelocity());
+            SmartDashboard.putNumber("rear velocity real", backEncoder.getVelocity());
+
+
+
+        }
     }
 }
