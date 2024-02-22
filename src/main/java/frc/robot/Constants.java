@@ -66,6 +66,7 @@ public final class Constants {
     public static final boolean DISABLE_DRIVETRAIN = !true;
     public static final boolean DISABLE_CANDLE = !true;
     public static final boolean DISABLE_LAUNCHER = !true;
+    public static final boolean DISABLE_POSE_ESTIMATOR = true;
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;

@@ -1,18 +1,13 @@
 package frc.robot.subsystems;
-import com.kauailabs.navx.frc.*;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.*;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,14 +16,12 @@ import frc.robot.subsystems.swerveSupport.SwerveModuleConfiguration;
 
 public class DriveTrain extends SubsystemBase {
     Pigeon2 pigeon = new Pigeon2(Constants.PigeonId); //CHANGE ME ASAP
-    private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
     private final SwerveModule m_frontLeftModule;
     private final SwerveModule m_frontRightModule;
     private final SwerveModule m_backLeftModule;
     private final SwerveModule m_backRightModule;
     private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-    SwerveDrivePoseEstimator m_PosEstimator;
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
                             (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0) * 0.10033 * Math.PI;
     private double headingOffset = 0;
@@ -54,6 +47,10 @@ public class DriveTrain extends SubsystemBase {
         return Rotation2d.fromDegrees(yaww-headingOffset);
     }
 
+    public SwerveDriveKinematics getKinematics() {
+        return m_kinematics;
+    }
+
     public void setRotationalOffsetToCurrent(){
         headingOffset = getGyroscopeRotation().getDegrees();
     }
@@ -63,8 +60,6 @@ public class DriveTrain extends SubsystemBase {
         m_frontRightModule = new SwerveModule(SwerveModuleConfiguration.frontRightConfig());
         m_backLeftModule  = new SwerveModule(SwerveModuleConfiguration.backLeftConfig());
         m_backRightModule = new SwerveModule(SwerveModuleConfiguration.backRightConfig());
-        m_PosEstimator = new SwerveDrivePoseEstimator(m_kinematics, 
-                                    getGyroscopeRotation(), getSwerveModulePositions(), new Pose2d());
     }
 
     public void drive (ChassisSpeeds chassisSpeeds){
@@ -93,13 +88,11 @@ public class DriveTrain extends SubsystemBase {
         m_backLeftModule.stop();
     }
 
-    public Pose2d getEstimatedPosition(){
-        return m_PosEstimator.getEstimatedPosition();
-    }
-
     @Override
     public void periodic() {
-        writeWheelPositions();
+        if (Constants.debuggymodey) {
+            writeWheelPositions();
+        }
     }
 
     public SwerveModulePosition[] getSwerveModulePositions() {
@@ -115,9 +108,9 @@ public class DriveTrain extends SubsystemBase {
 
 
     public void writeWheelPositions() {
-        SmartDashboard.putNumber("Radish-FL",m_frontLeftModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("Radish-FR",m_frontRightModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("Radish-BL",m_backLeftModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("Radish-BR",m_backRightModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("FL-angle",m_frontLeftModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("FR-angle",m_frontRightModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("BL-angle",m_backLeftModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("BR-angle",m_backRightModule.getAbsoluteAngle());
     }
 }

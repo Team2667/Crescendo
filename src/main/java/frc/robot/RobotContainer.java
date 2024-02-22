@@ -17,8 +17,12 @@ import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Lights;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
+
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,6 +52,7 @@ public class RobotContainer {
   private Lights candle;
   private IndicateNote notelight;
   private Intake intake;
+  private PoseEstimatorSubsystem poseEstimatorSubsystem;
   private IntakeStart intakestart;
   private Launcher launcher;
   private SendableChooser<Command> mailman;
@@ -67,6 +72,7 @@ public class RobotContainer {
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    configurePoseEstimatorSubsystem(drivetrain);
     populateMailbox();
   }
 
@@ -146,6 +152,13 @@ public class RobotContainer {
       downCommandButton.whileTrue(backCommand);
       JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
       rightCommandButton.whileTrue(rightCommand);
+    }
+  }
+
+  private void configurePoseEstimatorSubsystem(DriveTrain driveTrain) {
+    if (Constants.DISABLE_DRIVETRAIN || Constants.DISABLE_POSE_ESTIMATOR) {
+      var photonCamera = new PhotonCamera("orangePi");
+      poseEstimatorSubsystem = new PoseEstimatorSubsystem(photonCamera, driveTrain);
     }
   }
 
