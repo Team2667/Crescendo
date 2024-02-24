@@ -6,7 +6,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +27,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                                 driveTrain.getSwerveModulePositions(), new Pose2d());
         aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
         cameraToRobot = new Transform3d(0,0,0,new Rotation3d());
+    }
+
+    public Pose2d getPosition() {
+        return poseEstimator.getEstimatedPosition();
     }
 
     @Override

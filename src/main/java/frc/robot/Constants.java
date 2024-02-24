@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+
 /**
  * The Constants c`
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
@@ -73,6 +76,9 @@ public final class Constants {
     public static double spinuptime=0.5;
 
     public static boolean debuggymodey=true;
+
+    public static Transform3d CAMERA_TO_ROBOT = new Transform3d(0,0,0,new Rotation3d());
+    public static Transform3d ROBOT_TO_CAMERA = new Transform3d(0,0,0,new Rotation3d());
 }
 
 /*Whohahahao
