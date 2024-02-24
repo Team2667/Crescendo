@@ -70,6 +70,8 @@ public final class Constants {
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
     public static double spinuptime=0.5;
+
+    public static boolean debuggymodey=true;
 }
 
 /*Whohahahao

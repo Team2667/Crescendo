@@ -19,6 +19,13 @@ public class LaunchNote extends Command {
     }
 
     @Override
+    public boolean isFinished()
+    {
+        //double tolerance=150;
+        //return (launcher.getBackVelocity()>(launcher.rearspeed-tolerance)) && (launcher.getFrontVelocity()>=(launcher.frontspeed-tolerance));
+        return false;
+    }
+    @Override
     public void end(boolean interrupted) {
         launcher.stop();
         // TODO: stop the launcher

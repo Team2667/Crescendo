@@ -13,7 +13,6 @@ import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
-import frc.robot.commands.IntakeReverseRegardless;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.DriveTrain;
@@ -21,6 +20,7 @@ import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -47,10 +47,10 @@ public class RobotContainer {
   private DriveTrain drivetrain;
   private Lights candle;
   private IndicateNote notelight;
-
   private Intake intake;
   private IntakeStart intakestart;
   private Launcher launcher;
+  private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -67,6 +67,7 @@ public class RobotContainer {
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    populateMailbox();
   }
 
   /**
@@ -105,11 +106,10 @@ public class RobotContainer {
     if (disabled) {
       System.out.println("Disabled the Intake system.");
     } else {
-      //TODO: Create a member variable for a FeedNoteToLauncher command. Initialize that member variable variable to a new instance of FeedNoteToLauncher.
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
       m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
-      m_driverController.back().whileTrue(new IntakeReverseRegardless(intake));
+      m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
 
@@ -119,8 +119,9 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
-    // TODO: create a member variable for the Launcher subsystem. Initialize that member variable to a new instance of Launcher
-    // TODO: Create a member variable for the LaunchNote command. Initialize that member variable to a new instance of LaunchNote
+    m_driverController.start().toggleOnTrue(new LaunchNote(launcher));
+
+
   }
 
   private void configureDriveTrainBindings(boolean disabled) {
@@ -154,6 +155,7 @@ public class RobotContainer {
     } else {
       this.candle = new Lights();
       this.notelight = new IndicateNote(candle, ()->intake.isLimitSwitchEngaged());
+
     }
   }
 
@@ -162,8 +164,8 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(Constants.spinuptime)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(2));
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(4)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(7));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
@@ -174,6 +176,20 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+  private void populateMailbox()
+  {
+    mailman=new SendableChooser<>();
+     mailman.addOption("leunch",
+    new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6)
+    );
+    mailman.addOption("actual autonommouse we be usin", 
+    new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2)
+    .andThen(backCommand.withTimeout(1))
+    );
+    }
+    public Command getAutonomousCommand(){
+    return mailman.getSelected();
   public Command getAutonomousCommand() {
   //  Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
  //   return driveBackward.withTimeout(1);
