@@ -179,15 +179,16 @@ public class RobotContainer {
 
   private void populateMailbox()
   {
-    mailman=new SendableChooser<>();
-     mailman.addOption("leunch",
-    new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6)
-    );
-    mailman.addOption("actual autonommouse we be usin", 
-    new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2)
-    .andThen(backCommand.withTimeout(1))
-    );
-    } 
+    if (Constants.DISABLE_LAUNCHER) {
+      System.out.println("Disabled mailbox because launcher is disabled.");
+      System.out.println("WE WOULDNT WANT ANY FATAL ERRORS, WOULD WE ETHAN?");
+      System.out.println("*cough cough*");
+    } else {
+      mailman=new SendableChooser<>();
+      mailman.addOption("leunch",new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6));
+      mailman.addOption("actual autonommouse we be usin",new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2).andThen(backCommand.withTimeout(1)));
+    }
+  }
   
   public Command getAutonomousCommand(){
     return mailman.getSelected();
