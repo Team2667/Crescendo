@@ -187,12 +187,9 @@ public class RobotContainer {
     new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2)
     .andThen(backCommand.withTimeout(1))
     );
-    }
-    public Command getAutonomousCommand(){
+    } 
+  
+  public Command getAutonomousCommand(){
     return mailman.getSelected();
-  public Command getAutonomousCommand() {
-  //  Command driveBackward = new DriveFieldRelative(drivetrain, 0, .5);
- //   return driveBackward.withTimeout(1);
- return null;
   }
 }
