@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -49,6 +51,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     }
 
     private void updatePoseEstimator(){
+        poseEstimator.update(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions());
         var pipelineResult = photonCamera.getLatestResult();
         var resultTimeStamp = pipelineResult.getTimestampSeconds();
         if (resultTimeStamp != previousTimeStampSeconds && pipelineResult.hasTargets()){
@@ -64,7 +67,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                     });
             }
         }
-        poseEstimator.update(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions());
     }
 
     
