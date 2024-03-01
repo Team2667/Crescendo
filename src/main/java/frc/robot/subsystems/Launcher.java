@@ -33,7 +33,7 @@ public class Launcher extends SubsystemBase{
         backEncoder=backWheel.getEncoder();
         frontPID=frontWheel.getPIDController();
         rearPID=backWheel.getPIDController();
-
+        setPIDvals();
     }
     public void setPIDvals()
     {
@@ -53,7 +53,7 @@ public class Launcher extends SubsystemBase{
     }
 
     public void launchToSpeaker() {
-        setSpeedPid(frontspeed, rearspeed);
+        setSpeedPid(6000,6000);
 
     }
     public void frenchMode()
