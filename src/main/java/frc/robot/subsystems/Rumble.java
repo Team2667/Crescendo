@@ -16,23 +16,15 @@ public class Rumble extends SubsystemBase{
     public Rumble(XboxController boxobees) {
         this.boxobees=boxobees;
     }
-                                                                        //1=left, 2=right, 3=both
-    public void wibblewobble(float strength, int which){
-        switch (which) {
-            case 1:
-                boxobees.setRumble(RumbleType.kLeftRumble, strength);
-                break;
-            case 2:
-                boxobees.setRumble(RumbleType.kRightRumble, strength);
-                break;
-            case 3:
-                boxobees.setRumble(RumbleType.kBothRumble, strength);
-                break;    
-            default:
-                System.out.println("The which variable in wibble wobble is only 1 to 3, doofus.");
-                System.out.println("In my magnanity I will allow it to function.");
-                System.out.println("You are permitted to be grateful."); //aren't i so nice
-                break;
-        }
+
+
+    public void startRumble(){
+       boxobees.setRumble(RumbleType.kBothRumble, 10);  
     }
+
+    public void stopRumble(){
+       boxobees.setRumble(RumbleType.kBothRumble, 0);  
+    }
+
+                                                                        //1=left, 2=right, 3=both
 }

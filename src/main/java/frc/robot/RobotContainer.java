@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
+import frc.robot.commands.Rumbly;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
@@ -108,7 +109,8 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
+      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
+                      andThen(new IntakeStart(intake, 0.3)).andThen(new Rumbly(m_controller)).withTimeout(0.5));
       m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }

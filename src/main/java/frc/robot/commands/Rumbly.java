@@ -10,14 +10,15 @@ public class Rumbly extends Command {
     public Rumbly(XboxController boxobees) {
         this.rumble=new Rumble(boxobees);
     }
-
+    
     @Override
-    public void execute() {
-        rumble.wibblewobble(10, 3);
+    public void initialize() {
+        rumble.startRumble();
     }
+
     
     @Override
     public void end(boolean interrupted) {
-        rumble.wibblewobble(0, 3);
+        rumble.stopRumble();
     }
 }
