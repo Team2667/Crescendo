@@ -8,6 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
+import frc.robot.commands.MoveArms;
+import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
@@ -16,6 +18,7 @@ import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
+import frc.robot.subsystems.Arms;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Intake;
@@ -44,6 +47,7 @@ public class RobotContainer {
   DriveFieldRelative leftCommand;
   DriveFieldRelative backCommand;
   DriveFieldRelative rightCommand;
+  ResetIMU resetIMUCommand;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private DriveTrain drivetrain;
   private Lights candle;
@@ -51,6 +55,8 @@ public class RobotContainer {
   private Intake intake;
   private IntakeStart intakestart;
   private Launcher launcher;
+  private Arms arms;
+  private MoveArms moveArms;
   private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
@@ -68,6 +74,7 @@ public class RobotContainer {
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    configureArms(Constants.DISABLE_ARMS);
     populateMailbox();
   }
 
@@ -140,6 +147,9 @@ public class RobotContainer {
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
 
+      //TODO: assign the resetIMU command to a button
+
+
       //JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
       //forwardCommandButton.whileTrue(forwardCommand);
       //JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
@@ -158,6 +168,15 @@ public class RobotContainer {
       this.candle = new Lights();
       this.notelight = new IndicateNote(candle, ()->intake.isLimitSwitchEngaged());
 
+    }
+  }
+
+  private void configureArms(boolean disabled) {
+    if (disabled) {
+
+    } else {
+      //TODO: Create ARMS
+      //       Create MoveArms command
     }
   }
 

@@ -57,6 +57,10 @@ public class DriveTrain extends SubsystemBase {
     public void setRotationalOffsetToCurrent(){
         headingOffset = getGyroscopeRotation().getDegrees();
     }
+
+    public void resetIMU() {
+        //TODO: set the yaw on the pigeon to 0
+    }
       
     public DriveTrain(){
         m_frontLeftModule = new SwerveModule(SwerveModuleConfiguration.frontLeftConfig());
