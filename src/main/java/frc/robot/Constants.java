@@ -63,10 +63,10 @@ public final class Constants {
   // TODO: Add launcher constants
 
   //Make stuff stop working so errors dont make the drivers whine
-    public static final boolean DISABLE_INTAKE = true;
-    public static final boolean DISABLE_DRIVETRAIN = true;
-    public static final boolean DISABLE_CANDLE = true;
-    public static final boolean DISABLE_LAUNCHER = true;
+    public static final boolean DISABLE_INTAKE = false;
+    public static final boolean DISABLE_DRIVETRAIN = false;
+    public static final boolean DISABLE_CANDLE = false;
+    public static final boolean DISABLE_LAUNCHER = false;
     public static final boolean DISABLE_RUMBLE = false;
 
   //stop blinding kent

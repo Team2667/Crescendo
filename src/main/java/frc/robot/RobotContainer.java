@@ -110,7 +110,7 @@ public class RobotContainer {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
       m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
-                      andThen(new IntakeStart(intake, 0.3)).andThen(new Rumbly(m_controller)).withTimeout(0.5));
+                      andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
       m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
@@ -140,14 +140,14 @@ public class RobotContainer {
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
 
-      JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-      forwardCommandButton.whileTrue(forwardCommand);
-      JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-      leftCommandButton.whileTrue(leftCommand);
-      JoystickButton downCommandButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-      downCommandButton.whileTrue(backCommand);
-      JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-      rightCommandButton.whileTrue(rightCommand);
+      //JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
+      //forwardCommandButton.whileTrue(forwardCommand);
+      //JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
+      //leftCommandButton.whileTrue(leftCommand);
+      //JoystickButton downCommandButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
+      //downCommandButton.whileTrue(backCommand);
+      //JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
+      //rightCommandButton.whileTrue(rightCommand);
     }
   }
 
@@ -166,8 +166,8 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(4)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(7));
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
