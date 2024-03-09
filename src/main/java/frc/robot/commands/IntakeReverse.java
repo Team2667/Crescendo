@@ -21,7 +21,7 @@ public class IntakeReverse extends Command{
     public void initialize() {
         // TODO: enable the forward limit switch
         
-        intake.startReverse();
+        intake.startReverseFull();
 
     }
 

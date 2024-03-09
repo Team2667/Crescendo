@@ -53,7 +53,10 @@ public class Launcher extends SubsystemBase{
     }
 
     public void launchToSpeaker() {
-        setSpeedPid(6000,6000);
+        //front is top
+        //rear is bottom
+    setSpeedPid(4000,3500);
+        //setSpeedPid(4000,1600);
 
     }
     public void frenchMode()

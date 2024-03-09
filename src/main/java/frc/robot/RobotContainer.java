@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
 import frc.robot.commands.Rumbly;
+import frc.robot.commands.SpinUpLauncher;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -109,8 +111,10 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
-                      andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
+      Command intakeCycle=intakestart.andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)));
+
+      m_driverController.leftBumper().toggleOnTrue(
+        intakeCycle.andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)).alongWith((new Rumbly(m_controller))).withTimeout(0.5)));
       m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
@@ -166,7 +170,7 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
+    m_driverController.rightBumper().onTrue(new SpinUpLauncher(launcher).withTimeout(8)
       .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
