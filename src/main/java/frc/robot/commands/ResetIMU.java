@@ -7,13 +7,13 @@ public class ResetIMU extends Command {
     private DriveTrain driveTrain;
 
     public ResetIMU(DriveTrain driveTrain) {
-        // TODO: initialize member var driveTrain to parameter driveTrain
-        // TODO: add drive train as arequirement
+        addRequirements(driveTrain);
+        this.driveTrain=driveTrain;
     }
 
     @Override
     public void initialize(){
-        // TODO: call resetIMU on driveTrain
+        driveTrain.resetIMU();
     }
 
     @Override

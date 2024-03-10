@@ -59,7 +59,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void resetIMU() {
-        //TODO: set the yaw on the pigeon to 0
+        pigeon.setYaw(0);
     }
       
     public DriveTrain(){
