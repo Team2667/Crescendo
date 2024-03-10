@@ -61,7 +61,9 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
+  // Use CommandXboxController unless it is missing functions that XboxController has like .setRumble
   private final XboxController m_controller = new XboxController(0);
+  // Avoid usage unless needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -146,18 +148,10 @@ public class RobotContainer {
       backCommand = new DriveFieldRelative(drivetrain, Math.PI, .5);
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
+      resetIMUCommand = new ResetIMU(drivetrain);
 
       //TODO: assign the resetIMU command to a button
 
-
-      //JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-      //forwardCommandButton.whileTrue(forwardCommand);
-      //JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-      //leftCommandButton.whileTrue(leftCommand);
-      //JoystickButton downCommandButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-      //downCommandButton.whileTrue(backCommand);
-      //JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-      //rightCommandButton.whileTrue(rightCommand);
     }
   }
 
