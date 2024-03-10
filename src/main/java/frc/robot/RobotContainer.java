@@ -59,7 +59,7 @@ public class RobotContainer {
   private MoveArms moveArms;
   private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
+  private final CommandXboxController m_cmdcontroller = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
   // Use CommandXboxController unless it is missing functions that XboxController has like .setRumble
   private final XboxController m_controller = new XboxController(0);
@@ -118,9 +118,9 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
+      m_cmdcontroller.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
                       andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
-      m_driverController.back().whileTrue(new IntakeReverse(intake));
+      m_cmdcontroller.back().whileTrue(new IntakeReverse(intake));
     }
   }
 
@@ -130,7 +130,7 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
-    m_driverController.start().toggleOnTrue(new LaunchNote(launcher));
+    m_cmdcontroller.start().toggleOnTrue(new LaunchNote(launcher));
 
 
   }
@@ -149,6 +149,8 @@ public class RobotContainer {
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
       resetIMUCommand = new ResetIMU(drivetrain);
+
+      m_cmdcontroller.rightStick().onTrue(resetIMUCommand);
 
       //TODO: assign the resetIMU command to a button
 
@@ -179,7 +181,7 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
+    m_cmdcontroller.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
       .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
