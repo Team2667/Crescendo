@@ -170,11 +170,14 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new SpinUpLauncher(launcher).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
+    m_driverController.y().onTrue(new SpinUpLauncher(launcher,3500,2500,true).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,3500,2500,false)).withTimeout(2)));
+
+    m_driverController.b().onTrue(new SpinUpLauncher(launcher,4000,3500,true).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,4000,3500,false)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
-    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
+    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
   }
 
   /**
@@ -182,6 +185,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
 
   private void populateMailbox()
   {
