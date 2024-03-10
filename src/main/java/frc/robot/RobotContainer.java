@@ -152,8 +152,6 @@ public class RobotContainer {
 
       m_cmdcontroller.rightStick().onTrue(resetIMUCommand);
 
-      //TODO: assign the resetIMU command to a button
-
     }
   }
 
@@ -171,8 +169,11 @@ public class RobotContainer {
     if (disabled) {
 
     } else {
-      //TODO: Create ARMS
-      //       Create MoveArms command
+      arms = new Arms();
+      moveArms = new MoveArms(arms, m_controller);   
+      
+      arms.setDefaultCommand(moveArms);
+
     }
   }
 
