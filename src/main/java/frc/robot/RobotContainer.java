@@ -8,6 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
+import frc.robot.commands.MoveArms;
+import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
 import frc.robot.commands.SpinUpLauncher;
 import frc.robot.commands.DefaultDriveCommand;
@@ -17,6 +19,7 @@ import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
+import frc.robot.subsystems.Arms;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Intake;
@@ -46,6 +49,7 @@ public class RobotContainer {
   DriveFieldRelative leftCommand;
   DriveFieldRelative backCommand;
   DriveFieldRelative rightCommand;
+  ResetIMU resetIMUCommand;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private DriveTrain drivetrain;
   private Lights candle;
@@ -53,11 +57,15 @@ public class RobotContainer {
   private Intake intake;
   private IntakeStart intakestart;
   private Launcher launcher;
+  private Arms arms;
+  private MoveArms moveArms;
   private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
+  private final CommandXboxController m_cmdcontroller = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
+  // Use CommandXboxController unless it is missing functions that XboxController has like .setRumble
   private final XboxController m_controller = new XboxController(0);
+  // Avoid usage unless needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -70,6 +78,7 @@ public class RobotContainer {
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    configureArms(Constants.DISABLE_ARMS);
     populateMailbox();
   }
 
@@ -111,10 +120,8 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      Command intakeCycle=intakestart.andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)));
-
-      m_driverController.leftBumper().toggleOnTrue(
-        intakeCycle.andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)).alongWith((new Rumbly(m_controller))).withTimeout(0.5)));
+      m_cmdcontroller.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
+                      andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
       m_driverController.back().whileTrue(new IntakeReverse(intake));
     }
   }
@@ -125,7 +132,7 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
-    m_driverController.start().toggleOnTrue(new LaunchNote(launcher));
+    m_cmdcontroller.start().toggleOnTrue(new LaunchNote(launcher));
 
 
   }
@@ -143,15 +150,10 @@ public class RobotContainer {
       backCommand = new DriveFieldRelative(drivetrain, Math.PI, .5);
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
+      resetIMUCommand = new ResetIMU(drivetrain);
 
-      //JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-      //forwardCommandButton.whileTrue(forwardCommand);
-      //JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-      //leftCommandButton.whileTrue(leftCommand);
-      //JoystickButton downCommandButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-      //downCommandButton.whileTrue(backCommand);
-      //JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-      //rightCommandButton.whileTrue(rightCommand);
+      m_cmdcontroller.rightStick().onTrue(resetIMUCommand);
+
     }
   }
 
@@ -165,16 +167,25 @@ public class RobotContainer {
     }
   }
 
+  private void configureArms(boolean disabled) {
+    if (disabled) {
+
+    } else {
+      arms = new Arms();
+      moveArms = new MoveArms(arms, m_controller);   
+      
+      arms.setDefaultCommand(moveArms);
+
+    }
+  }
+
   private void configureCompoundCommands(boolean disabled) {
     if (disabled) {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.y().onTrue(new SpinUpLauncher(launcher,3500,2500,true).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,3500,2500,false)).withTimeout(2)));
-
-    m_driverController.b().onTrue(new SpinUpLauncher(launcher,4000,3500,true).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,4000,3500,false)).withTimeout(2)));
+    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds

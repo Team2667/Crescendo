@@ -59,6 +59,10 @@ public final class Constants {
     public static final int INTAKE_MOTOR_CAN_ID = 15;
     public static final double INTAKE_MOTOR_SPEED = 1;
 
+  // Arms constants
+    public static final int LEFT_ARM = 40;
+    public static final int RIGHT_ARM = 41;
+
   // Launcher constants
   // TODO: Add launcher constants
 
@@ -68,6 +72,7 @@ public final class Constants {
     public static final boolean DISABLE_CANDLE = false;
     public static final boolean DISABLE_LAUNCHER = false;
     public static final boolean DISABLE_RUMBLE = false;
+    public static final boolean DISABLE_ARMS = false;
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
