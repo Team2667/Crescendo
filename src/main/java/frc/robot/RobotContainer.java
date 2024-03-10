@@ -17,6 +17,7 @@ import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
+import frc.robot.commands.IntakeReverseRegardless;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
 import frc.robot.subsystems.Arms;
@@ -122,7 +123,7 @@ public class RobotContainer {
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
       m_cmdcontroller.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
                       andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
-      m_driverController.back().whileTrue(new IntakeReverse(intake));
+      m_cmdcontroller.back().whileTrue(new IntakeReverseRegardless(intake));
     }
   }
 
@@ -184,8 +185,11 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(.75)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher)).withTimeout(2)));
+    m_cmdcontroller.b().onTrue(new SpinUpLauncher(launcher,4000,3500,true).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,4000,3500,false)).withTimeout(2)));
+
+    m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,3500,2500,true).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,3500,2500,false)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
