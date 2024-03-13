@@ -27,6 +27,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -80,7 +81,10 @@ public class RobotContainer {
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
     configureArms(Constants.DISABLE_ARMS);
-    populateMailbox();
+        populateMailbox();
+     SmartDashboard.putData("autonomous modee", mailman);
+
+
   }
 
   /**
@@ -121,8 +125,14 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_cmdcontroller.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).
-                      andThen(new IntakeStart(intake, 0.3)).andThen((new Rumbly(m_controller)).withTimeout(0.5)));
+      m_cmdcontroller.leftBumper().toggleOnTrue(
+        intakestart.andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake, 1))
+        .andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake,1))
+        .andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake,0.3))
+        .andThen((new Rumbly(m_controller)).withTimeout(0.5)));
       m_cmdcontroller.back().whileTrue(new IntakeReverseRegardless(intake));
     }
   }
@@ -185,11 +195,11 @@ public class RobotContainer {
       System.out.println("Disabled compound commands");
     }
 
-    m_cmdcontroller.b().onTrue(new SpinUpLauncher(launcher,4000,3500,true).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,4000,3500,false)).withTimeout(2)));
+    m_cmdcontroller.b().onTrue(new SpinUpLauncher(launcher,intake,4000,3500,true,false).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,4000,3500,false,false)).withTimeout(2)));
 
-    m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,3500,2500,true).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,3500,2500,false)).withTimeout(2)));
+    m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,intake,3500,2500,true,false).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(2)));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
@@ -210,8 +220,20 @@ public class RobotContainer {
       System.out.println("*cough cough*");
     } else {
       mailman=new SendableChooser<>();
-      mailman.addOption("leunch",new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6));
-      mailman.addOption("actual autonommouse we be usin",new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2).andThen(backCommand.withTimeout(1)));
+     // Command intakeCommand=new IntakeStart(intake,1).andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)));
+     // Command launchCommand=new SpinUpLauncher(launcher,6000,6000,true).withTimeout(4).andThen(new SpinUpLauncher(launcher,6000,6000,false).alongWith(new FeedNoteToLauncher(intake))).withTimeout(4);
+      Command move=new DriveFieldRelative(drivetrain, 0, 0.25);
+      //mailman.setDefaultOption("launch",intakeCommand.andThen(launchCommand));
+      mailman.addOption("launch+move",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
+        .andThen(move.withTimeout(2))
+          ));
+      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(1));
+      mailman.addOption("nothing", null);
+      SmartDashboard.putData("autonomous mode", mailman);
     }
   }
   
