@@ -177,8 +177,8 @@ public class RobotContainer {
   }
 
   private void configurePoseEstimatorSubsystem(DriveTrain driveTrain) {
-    if (Constants.DISABLE_DRIVETRAIN || Constants.DISABLE_POSE_ESTIMATOR) {
-      var photonCamera = new PhotonCamera("orangePi");
+    if ( !(Constants.DISABLE_DRIVETRAIN || Constants.DISABLE_POSE_ESTIMATOR) ) {
+      var photonCamera = new PhotonCamera("USB_webcam");
       poseEstimatorSubsystem = new PoseEstimatorSubsystem(photonCamera, driveTrain);
     }
   }
@@ -261,7 +261,7 @@ public class RobotContainer {
         .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
         .andThen(new DriveFieldRelative(drivetrain, 0, 0.25).alongWith(new IntakeStart(intake,1)).withTimeout
         (2))));
-      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(1));
+      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(5));
       mailman.addOption("nothing", null);
       mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
       SmartDashboard.putData("autonomous mode", mailman);

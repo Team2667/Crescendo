@@ -48,23 +48,35 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
         SmartDashboard.putNumber("Robot Rotation degrees", position.getRotation().getDegrees());
+   
     }
 
     private void updatePoseEstimator(){
         poseEstimator.update(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions());
         var pipelineResult = photonCamera.getLatestResult();
-        var resultTimeStamp = pipelineResult.getTimestampSeconds();
+        var resultTimeStamp = pipelineResult.getTimestampSeconds();        
         if (resultTimeStamp != previousTimeStampSeconds && pipelineResult.hasTargets()){
+            SmartDashboard.putNumber("vision timestamp", resultTimeStamp);
             previousTimeStampSeconds = resultTimeStamp;
             var target = pipelineResult.getBestTarget();
-            if (target.getPoseAmbiguity() <= .2){
-                aprilTagFieldLayout.getTagPose(target.getFiducialId()).ifPresent(
+            SmartDashboard.putNumber("vision ambiguity", target.getPoseAmbiguity());
+
+            if (true){//target.getPoseAmbiguity() <= .2){
+                aprilTagFieldLayout.getTagPose(target.getFiducialId()).ifPresentOrElse(
                     targetPos -> {
                         Transform3d camToTarget = target.getBestCameraToTarget();
                         Pose3d camPose = targetPos.transformBy(camToTarget.inverse());
                         var visionMeasurement = camPose.transformBy(cameraToRobot);
+                        var visionPos = visionMeasurement.toPose2d();
+                        SmartDashboard.putNumber("Vision X", visionPos.getX());
+                        SmartDashboard.putNumber("Vision Y", visionPos.getY());
+                        SmartDashboard.putNumber("Vision rotation", visionPos.getRotation().getDegrees());
+                        SmartDashboard.putNumber("Vision timestamp", resultTimeStamp);
+
+
+
                         poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStampSeconds);
-                    });
+                    }, () -> SmartDashboard.putNumber("or else", resultTimeStamp));
             }
         }
     }
