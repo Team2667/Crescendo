@@ -28,6 +28,13 @@ public class MoveArms extends Command{
             case 180:
                 arms.retract();
                 break;
+            case 90:
+                arms.retractLeft(0.1);
+                break;
+            case 270:
+                arms.retractRight(0.1);
+                break;
+
             default:
                 break;
         }

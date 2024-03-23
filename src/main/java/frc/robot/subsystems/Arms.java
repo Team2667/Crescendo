@@ -18,23 +18,51 @@ public class Arms extends SubsystemBase {
     }
 
     public void retract(){
-        double speed=0.3;
+        double speed=0.6;
         left.set(speed);
         right.set(speed);
-        // TODO: make left and right motor spin in a direction that will pull the robot up.
+        // TODO: make left and right motor spin in a diirection that will pull the robot up.
     }
 
     public void reach(){
-        double speed=0.3;
+        double speed=0.6;
         left.set(-speed);
         right.set(-speed);
         // TODO: Make the left and right motors spin in a direction that will extend the arms
+    }
+    public void reachLeft(double speed){
+        left.set(-speed);
+    }
+    public void reachRight(double speed)
+    {
+        right.set(-speed);
+    }
+    public void retractLeft(double speed){
+        left.set(speed);
+    }
+    public void retractRight(double speed)
+    {
+        right.set(speed);
+    }
+    public void stopLeft()
+    {
+        left.stopMotor();
+    }
+    public void stopRight()
+    {
+        right.stopMotor();
     }
 
     public void stop() {
         left.stopMotor();
         right.stopMotor();
         // TODO: Stop both arm motors
+    }
+    public double getLeftCurrent(){
+        return left.getOutputCurrent();
+    }
+    public double getRightCurrent(){
+        return right.getOutputCurrent();
     }
     
 }

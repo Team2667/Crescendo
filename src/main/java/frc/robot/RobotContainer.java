@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
 import frc.robot.commands.MoveArms;
+import frc.robot.commands.MoveArmsUntilResistance;
 import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
 import frc.robot.commands.SpinUpLauncher;
@@ -126,13 +127,14 @@ public class RobotContainer {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
       m_cmdcontroller.leftBumper().toggleOnTrue(
-        intakestart.andThen(new IntakeReverse(intake))
+        intakestart.andThen(
+           new Rumbly(m_controller).withTimeout(0.5))
+           .andThen(new IntakeReverse(intake))
         .andThen(new IntakeStart(intake, 1))
         .andThen(new IntakeReverse(intake))
         .andThen(new IntakeStart(intake,1))
         .andThen(new IntakeReverse(intake))
-        .andThen(new IntakeStart(intake,0.3))
-        .andThen((new Rumbly(m_controller)).withTimeout(0.5)));
+        .andThen(new IntakeStart(intake,0.3)));
       m_cmdcontroller.back().whileTrue(new IntakeReverseRegardless(intake));
     }
   }
@@ -196,10 +198,10 @@ public class RobotContainer {
     }
 
     m_cmdcontroller.b().onTrue(new SpinUpLauncher(launcher,intake,4000,3500,true,false).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,4000,3500,false,false)).withTimeout(2)));
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,4000,3500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
 
     m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,intake,3500,2500,true,false).withTimeout(8)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(2)));
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
@@ -224,6 +226,12 @@ public class RobotContainer {
      // Command launchCommand=new SpinUpLauncher(launcher,6000,6000,true).withTimeout(4).andThen(new SpinUpLauncher(launcher,6000,6000,false).alongWith(new FeedNoteToLauncher(intake))).withTimeout(4);
       Command move=new DriveFieldRelative(drivetrain, 0, 0.25);
       //mailman.setDefaultOption("launch",intakeCommand.andThen(launchCommand));
+      mailman.addOption("launch",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(6) )
+          ));
       mailman.addOption("launch+move",
         new IntakeReverse(intake)
         .andThen(new IntakeStart(intake, 0.3)
@@ -231,8 +239,16 @@ public class RobotContainer {
         .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
         .andThen(move.withTimeout(2))
           ));
+        mailman.addOption("launch+move+intake",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
+        .andThen(new DriveFieldRelative(drivetrain, 0, 0.25).alongWith(new IntakeStart(intake,1)).withTimeout
+        (2))));
       mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(1));
       mailman.addOption("nothing", null);
+      mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
       SmartDashboard.putData("autonomous mode", mailman);
     }
   }

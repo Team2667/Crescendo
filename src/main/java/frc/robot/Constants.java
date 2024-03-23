@@ -79,6 +79,7 @@ public final class Constants {
     public static double spinuptime=0.5;
 
     public static boolean debuggymodey=true;
+    public static double ArmStowStopCurrent=15;
 }
 
 /*Whohahahao
