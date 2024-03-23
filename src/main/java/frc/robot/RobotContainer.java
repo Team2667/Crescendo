@@ -8,13 +8,20 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
+import frc.robot.commands.MoveArms;
+import frc.robot.commands.MoveArmsUntilResistance;
+import frc.robot.commands.ResetIMU;
+import frc.robot.commands.Rumbly;
+import frc.robot.commands.SpinUpLauncher;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
 import frc.robot.commands.FeedNoteToLauncher;
 import frc.robot.commands.IndicateNote;
 import frc.robot.commands.IntakeReverse;
+import frc.robot.commands.IntakeReverseRegardless;
 import frc.robot.commands.IntakeStart;
 import frc.robot.commands.LaunchNote;
+import frc.robot.subsystems.Arms;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -25,7 +32,9 @@ import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -47,6 +56,7 @@ public class RobotContainer {
   DriveFieldRelative leftCommand;
   DriveFieldRelative backCommand;
   DriveFieldRelative rightCommand;
+  ResetIMU resetIMUCommand;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private DriveTrain drivetrain;
   private Lights candle;
@@ -55,11 +65,15 @@ public class RobotContainer {
   private PoseEstimatorSubsystem poseEstimatorSubsystem;
   private IntakeStart intakestart;
   private Launcher launcher;
+  private Arms arms;
+  private MoveArms moveArms;
   private SendableChooser<Command> mailman;
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
+  private final CommandXboxController m_cmdcontroller = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
+  // Use CommandXboxController unless it is missing functions that XboxController has like .setRumble
   private final XboxController m_controller = new XboxController(0);
+  // Avoid usage unless needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,7 +87,11 @@ public class RobotContainer {
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
     configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
     configurePoseEstimatorSubsystem(drivetrain);
-    populateMailbox();
+    configureArms(Constants.DISABLE_ARMS);
+        populateMailbox();
+     SmartDashboard.putData("autonomous modee", mailman);
+
+
   }
 
   /**
@@ -114,8 +132,16 @@ public class RobotContainer {
     } else {
       this.intake = new Intake();
       this.intakestart = new IntakeStart(intake,Constants.INTAKE_MOTOR_SPEED);
-      m_driverController.leftBumper().toggleOnTrue(intakestart.andThen(new IntakeReverse(intake)).andThen(new IntakeStart(intake, 0.3)));
-      m_driverController.back().whileTrue(new IntakeReverse(intake));
+      m_cmdcontroller.leftBumper().toggleOnTrue(
+        intakestart.andThen(
+           new Rumbly(m_controller).withTimeout(0.5))
+           .andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake, 1))
+        .andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake,1))
+        .andThen(new IntakeReverse(intake))
+        .andThen(new IntakeStart(intake,0.3)));
+      m_cmdcontroller.back().whileTrue(new IntakeReverseRegardless(intake));
     }
   }
 
@@ -125,7 +151,7 @@ public class RobotContainer {
       return;
     }
     launcher=new Launcher();
-    m_driverController.start().toggleOnTrue(new LaunchNote(launcher));
+    m_cmdcontroller.start().toggleOnTrue(new LaunchNote(launcher));
 
 
   }
@@ -143,15 +169,10 @@ public class RobotContainer {
       backCommand = new DriveFieldRelative(drivetrain, Math.PI, .5);
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);
       rightCommand = new DriveFieldRelative(drivetrain, Math.PI / 2, .5);
+      resetIMUCommand = new ResetIMU(drivetrain);
 
-      JoystickButton forwardCommandButton = new JoystickButton(m_controller, XboxController.Button.kY.value);
-      forwardCommandButton.whileTrue(forwardCommand);
-      JoystickButton leftCommandButton = new JoystickButton(m_controller, XboxController.Button.kX.value);
-      leftCommandButton.whileTrue(leftCommand);
-      JoystickButton downCommandButton = new JoystickButton(m_controller, XboxController.Button.kA.value);
-      downCommandButton.whileTrue(backCommand);
-      JoystickButton rightCommandButton = new JoystickButton(m_controller, XboxController.Button.kB.value);
-      rightCommandButton.whileTrue(rightCommand);
+      m_cmdcontroller.rightStick().onTrue(resetIMUCommand);
+
     }
   }
 
@@ -161,6 +182,8 @@ public class RobotContainer {
       poseEstimatorSubsystem = new PoseEstimatorSubsystem(photonCamera, driveTrain);
     }
   }
+
+
 
   private void configureCandleBindings(boolean disabled) {
     if (disabled) {
@@ -172,16 +195,31 @@ public class RobotContainer {
     }
   }
 
+  private void configureArms(boolean disabled) {
+    if (disabled) {
+
+    } else {
+      arms = new Arms();
+      moveArms = new MoveArms(arms, m_controller);   
+      
+      arms.setDefaultCommand(moveArms);
+
+    }
+  }
+
   private void configureCompoundCommands(boolean disabled) {
     if (disabled) {
       System.out.println("Disabled compound commands");
     }
 
-    m_driverController.rightBumper().onTrue(new LaunchNote(launcher).withTimeout(4)
-      .andThen(new FeedNoteToLauncher(intake).alongWith(new LaunchNote(launcher))).withTimeout(7));
+    m_cmdcontroller.b().onTrue(new SpinUpLauncher(launcher,intake,4000,3500,true,false).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,4000,3500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
+
+    m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,intake,3500,2500,true,false).withTimeout(8)
+      .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
     // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
-    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 secons
+    // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
   }
 
   /**
@@ -190,18 +228,47 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
 
+
   private void populateMailbox()
   {
-    mailman=new SendableChooser<>();
-     mailman.addOption("leunch",
-    new LaunchNote(launcher).withTimeout(4).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(6)
-    );
-    mailman.addOption("actual autonommouse we be usin", 
-    new LaunchNote(launcher).withTimeout(0.5).andThen(new LaunchNote(launcher).andThen(new FeedNoteToLauncher(intake))).withTimeout(2)
-    .andThen(backCommand.withTimeout(1))
-    );
+    if (Constants.DISABLE_LAUNCHER) {
+      System.out.println("Disabled mailbox because launcher is disabled.");
+      System.out.println("WE WOULDNT WANT ANY FATAL ERRORS, WOULD WE ETHAN?");
+      System.out.println("*cough cough*");
+    } else {
+      mailman=new SendableChooser<>();
+     // Command intakeCommand=new IntakeStart(intake,1).andThen(new IntakeReverse(intake).andThen(new IntakeStart(intake, 0.3)));
+     // Command launchCommand=new SpinUpLauncher(launcher,6000,6000,true).withTimeout(4).andThen(new SpinUpLauncher(launcher,6000,6000,false).alongWith(new FeedNoteToLauncher(intake))).withTimeout(4);
+      Command move=new DriveFieldRelative(drivetrain, 0, 0.25);
+      //mailman.setDefaultOption("launch",intakeCommand.andThen(launchCommand));
+      mailman.addOption("launch",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(6) )
+          ));
+      mailman.addOption("launch+move",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
+        .andThen(move.withTimeout(2))
+          ));
+        mailman.addOption("launch+move+intake",
+        new IntakeReverse(intake)
+        .andThen(new IntakeStart(intake, 0.3)
+        .andThen(new SpinUpLauncher(launcher,intake,6000,6000,true,false))
+        .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
+        .andThen(new DriveFieldRelative(drivetrain, 0, 0.25).alongWith(new IntakeStart(intake,1)).withTimeout
+        (2))));
+      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(1));
+      mailman.addOption("nothing", null);
+      mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
+      SmartDashboard.putData("autonomous mode", mailman);
     }
-    public Command getAutonomousCommand(){
+  }
+  
+  public Command getAutonomousCommand(){
     return mailman.getSelected();
   }
 }

@@ -3,12 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
-public class IntakeReverse extends Command{
+public class IntakeReverseRegardless extends Command{
     private Intake intake;
     
     // This is the constructor for IntakeStart. Its purpose is
     // to assign values to the class fields. 
-    public IntakeReverse(Intake intakeParam) {
+    public IntakeReverseRegardless(Intake intakeParam) {
         //TODO: add intake as a requirement for this com.sun.media.sound
         // See https://github.wpilib.org/allwpilib/docs/beta/java/edu/wpi/first/wpilibj2/command/Command.html#addRequirements(edu.wpi.first.wpilibj2.command.Subsystem...) 
         intake=intakeParam;
@@ -21,15 +21,14 @@ public class IntakeReverse extends Command{
     public void initialize() {
         // TODO: enable the forward limit switch
         
-        intake.startReverseFull();
+        intake.startReverse();
 
     }
 
     @Override
     public boolean isFinished() {
         // TODO: Return true if the limit switch is engaged, false otherwise.
-        return !intake.isLimitSwitchEngaged();
-        //return false;
+        return false;
     }
 
     // End methods do everything necessary to end a command. Typically this means

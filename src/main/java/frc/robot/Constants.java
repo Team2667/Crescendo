@@ -32,22 +32,23 @@ public final class Constants {
   public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
   public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
   public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 14;
-  public static final double FRONT_LEFT_MODULE_STEER_OFFSET =-0.04052734375;
+  public static final double FRONT_LEFT_MODULE_STEER_OFFSET =-0.0419921875;
 
   public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 5;
   public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 6;
   public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 12;
-  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -0.199462890625;
+  public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -0.19873046875;
 
   public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 3;
   public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4;
   public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11;
-  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -0.350830078125;
+  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -0.355712890625;
 
   public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 7;
   public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 8;
   public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 13;
-  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -0.044921875;
+  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -0.04736328125;
+  //public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -0.044921875;
 
   public static final double WHEEL_REVOLUTIONS_PER_METER = 3.0;
   public static final double PERCENTAGE_MAX_SPEED = 100.0;
@@ -61,22 +62,28 @@ public final class Constants {
     public static final int INTAKE_MOTOR_CAN_ID = 15;
     public static final double INTAKE_MOTOR_SPEED = 1;
 
+  // Arms constants
+    public static final int LEFT_ARM = 40;
+    public static final int RIGHT_ARM = 41;
+
   // Launcher constants
   // TODO: Add launcher constants
 
   //Make stuff stop working so errors dont make the drivers whine
-    public static final boolean DISABLE_INTAKE = !true;
-    public static final boolean DISABLE_DRIVETRAIN = !true;
-    public static final boolean DISABLE_CANDLE = !true;
-    public static final boolean DISABLE_LAUNCHER = !true;
-    public static final boolean DISABLE_POSE_ESTIMATOR = true;
+    public static final boolean DISABLE_INTAKE = false;
+    public static final boolean DISABLE_DRIVETRAIN = false;
+    public static final boolean DISABLE_CANDLE = false;
+    public static final boolean DISABLE_LAUNCHER = false;
+    public static final boolean DISABLE_RUMBLE=false;
+    public static final boolean DISABLE_ARMS=false;
+    public static final boolean DISABLE_POSE_ESTIMATOR=false;
 
   //stop blinding kent
     public static final int BRIGHTNESS_DIVISOR = 10;
     public static double spinuptime=0.5;
 
     public static boolean debuggymodey=true;
-
+    public static double ArmStowStopCurrent=15;
     public static Transform3d CAMERA_TO_ROBOT = new Transform3d(0,0,0,new Rotation3d());
     public static Transform3d ROBOT_TO_CAMERA = new Transform3d(0,0,0,new Rotation3d());
 }
