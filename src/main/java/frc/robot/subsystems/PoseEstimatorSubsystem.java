@@ -62,21 +62,27 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("vision ambiguity", target.getPoseAmbiguity());
 
             if (true){//target.getPoseAmbiguity() <= .2){
-                aprilTagFieldLayout.getTagPose(target.getFiducialId()).ifPresentOrElse(
+                aprilTagFieldLayout.getTagPose(target.getFiducialId()).ifPresent(
                     targetPos -> {
                         Transform3d camToTarget = target.getBestCameraToTarget();
+                        SmartDashboard.putNumber("cam-to-target-transform-x", camToTarget.getX());
+                        SmartDashboard.putNumber("cam-to-target-transform-y", camToTarget.getY());
+                        SmartDashboard.putNumber("cam-to-target-transform-z", camToTarget.getZ());
+
                         Pose3d camPose = targetPos.transformBy(camToTarget.inverse());
+                        SmartDashboard.putNumber("camPose-x", camPose.getX());
+                        SmartDashboard.putNumber("camPose-y", camPose.getY());
+                        SmartDashboard.putNumber("camPose-z", camPose.getZ());
+                        SmartDashboard.putNumber("camPose-rotation", camPose.getRotation().getAngle());
+
                         var visionMeasurement = camPose.transformBy(cameraToRobot);
                         var visionPos = visionMeasurement.toPose2d();
                         SmartDashboard.putNumber("Vision X", visionPos.getX());
                         SmartDashboard.putNumber("Vision Y", visionPos.getY());
                         SmartDashboard.putNumber("Vision rotation", visionPos.getRotation().getDegrees());
                         SmartDashboard.putNumber("Vision timestamp", resultTimeStamp);
-
-
-
                         poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStampSeconds);
-                    }, () -> SmartDashboard.putNumber("or else", resultTimeStamp));
+                    });
             }
         }
     }
