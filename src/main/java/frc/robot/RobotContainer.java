@@ -10,8 +10,11 @@ import frc.robot.commands.BooleanFunc;
 import frc.robot.commands.Lighter;
 import frc.robot.commands.MoveArms;
 import frc.robot.commands.MoveArmsUntilResistance;
+import frc.robot.commands.MoveToPosition;
 import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.commands.SpinUpLauncher;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
@@ -27,6 +30,8 @@ import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
+
+import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
 
@@ -68,6 +73,8 @@ public class RobotContainer {
   private Arms arms;
   private MoveArms moveArms;
   private SendableChooser<Command> mailman;
+  private Supplier<Pose2d> wheretogo;
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_cmdcontroller = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -261,9 +268,12 @@ public class RobotContainer {
         .andThen( (new SpinUpLauncher(launcher,intake,6000,6000,false,true).alongWith(new FeedNoteToLauncher(intake))).withTimeout(1) )
         .andThen(new DriveFieldRelative(drivetrain, 0, 0.25).alongWith(new IntakeStart(intake,1)).withTimeout
         (2))));
-      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.25).withTimeout(5));
+      mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.15));//.withTimeout(15));
       mailman.addOption("nothing", null);
       mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
+      
+      mailman.addOption("precise vroom vroom",new MoveToPosition(drivetrain,()->poseEstimatorSubsystem.getPosition(),2,2));
+            mailman.addOption("precise vroom vroom back",new MoveToPosition(drivetrain,()->poseEstimatorSubsystem.getPosition(),0,0));
       SmartDashboard.putData("autonomous mode", mailman);
     }
   }
