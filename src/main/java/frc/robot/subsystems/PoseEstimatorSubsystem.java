@@ -8,8 +8,11 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -86,7 +89,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                             SmartDashboard.putNumber("Vision rotation", visionPos.getRotation().getDegrees());
                             SmartDashboard.putNumber("Vision timestamp", resultTimeStamp);
                         }
-                        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStampSeconds);
+                       
+                        var rotation = Rotation2d.fromDegrees((visionPos.getRotation().getDegrees() + 180) % 360);
+                        poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(), visionPos.getY(), rotation), 
+                                                previousTimeStampSeconds);
                        //poseEstimator.resetPosition(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions(), getPosition());
                     });
             }
