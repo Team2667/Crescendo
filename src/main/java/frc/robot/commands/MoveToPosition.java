@@ -31,7 +31,7 @@ public class MoveToPosition extends Command {
     private Pose2d goalPose;
 
 
-    public MoveToPosition(DriveTrain driveTrain, Supplier<Pose2d> robotPoseSupplier,int x, int y) {
+    public MoveToPosition(DriveTrain driveTrain, Supplier<Pose2d> robotPoseSupplier,double x, double y,double rotation) {
         this.driveTrain = driveTrain;
         this.robotPoseSupplier = robotPoseSupplier;
 
@@ -42,7 +42,7 @@ public class MoveToPosition extends Command {
         omegaController.enableContinuousInput(-Math.PI, Math.PI);
         addRequirements(driveTrain);
 
-        goalPose = new Pose2d(x,y,new Rotation2d(Math.PI));
+        goalPose = new Pose2d(x,y,new Rotation2d(Math.toRadians(rotation)));
     }
 
     @Override

@@ -92,7 +92,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                        
                         var rotation = Rotation2d.fromDegrees((visionPos.getRotation().getDegrees() + 180) % 360);
                         poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(), visionPos.getY(), rotation), 
-                                                previousTimeStampSeconds);
+                                    previousTimeStampSeconds);
+                        //poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(), 8.218-visionPos.getY(), rotation), 
+                        //                        previousTimeStampSeconds);
+                        //poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(),visionPos.getY(),visionPos.getRotation()), previousTimeStampSeconds);
                        //poseEstimator.resetPosition(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions(), getPosition());
                     });
             }
