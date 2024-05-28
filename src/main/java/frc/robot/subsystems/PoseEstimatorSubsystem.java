@@ -11,7 +11,9 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.proto.Wpimath;
@@ -70,27 +72,55 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
         SmartDashboard.putNumber("Robot Rotation degrees", position.getRotation().getDegrees());
+   
     }
 
     private void updatePoseEstimator(){
         poseEstimator.update(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions());
         var pipelineResult = photonCamera.getLatestResult();
-        var resultTimeStamp = pipelineResult.getTimestampSeconds();
+        var resultTimeStamp = pipelineResult.getTimestampSeconds();        
         if (resultTimeStamp != previousTimeStampSeconds && pipelineResult.hasTargets()){
+            SmartDashboard.putNumber("vision timestamp", resultTimeStamp);
             previousTimeStampSeconds = resultTimeStamp;
             var target = pipelineResult.getBestTarget();
+            SmartDashboard.putNumber("vision ambiguity", target.getPoseAmbiguity());
+
             if (target.getPoseAmbiguity() <= .2){
                 aprilTagFieldLayout.getTagPose(target.getFiducialId()).ifPresent(
                     targetPos -> {
                         Transform3d camToTarget = target.getBestCameraToTarget();
+                        if(Constants.debuggymodey){
+                            SmartDashboard.putNumber("cam-to-target-transform-x", camToTarget.getX());
+                            SmartDashboard.putNumber("cam-to-target-transform-y", camToTarget.getY());
+                            SmartDashboard.putNumber("cam-to-target-transform-z", camToTarget.getZ());
+                        }
                         Pose3d camPose = targetPos.transformBy(camToTarget.inverse());
+                        if(Constants.debuggymodey){
+                            SmartDashboard.putNumber("camPose-x", camPose.getX());
+                            SmartDashboard.putNumber("camPose-y", camPose.getY());
+                            SmartDashboard.putNumber("camPose-z", camPose.getZ());
+                            SmartDashboard.putNumber("camPose-rotation", camPose.getRotation().getAngle());
+                        }
+
                         //FIGGER OUT HOW TO GET THE 3D ROTATION
                         var visionMeasurement = camPose.transformBy(cameraToRobot);
-                        poseEstimator.addVisionMeasurement(visionMeasurement.toPose2d(), previousTimeStampSeconds);
+                        var visionPos = visionMeasurement.toPose2d();
+                        if(Constants.debuggymodey) {
+                            SmartDashboard.putNumber("Vision X", visionPos.getX());
+                            SmartDashboard.putNumber("Vision Y", visionPos.getY());
+                            SmartDashboard.putNumber("Vision rotation", visionPos.getRotation().getDegrees());
+                            SmartDashboard.putNumber("Vision timestamp", resultTimeStamp);
+                        }
+                       
+                        var rotation = Rotation2d.fromDegrees((visionPos.getRotation().getDegrees() + 180) % 360);
+                        poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(), visionPos.getY(), rotation), 
+                                    previousTimeStampSeconds);
+                        //poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(), 8.218-visionPos.getY(), rotation), 
+                        //                        previousTimeStampSeconds);
+                        //poseEstimator.addVisionMeasurement(new Pose2d(visionPos.getX(),visionPos.getY(),visionPos.getRotation()), previousTimeStampSeconds);
+                       //poseEstimator.resetPosition(driveTrain.getGyroscopeRotation(), driveTrain.getSwerveModulePositions(), getPosition());
                     });
             }
         }
-    }
-
-    
+    }   
 }

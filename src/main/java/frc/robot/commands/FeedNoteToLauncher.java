@@ -27,5 +27,8 @@ public class FeedNoteToLauncher extends Command{
         intake.enableLimitSwitch();
         intake.stop();
     }
-    
+    public boolean isFinished()
+    {
+        return !intake.isLimitSwitchEngaged();
+    }    
 }

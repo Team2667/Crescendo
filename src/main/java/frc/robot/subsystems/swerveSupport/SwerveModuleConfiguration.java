@@ -25,8 +25,8 @@ public class SwerveModuleConfiguration {
     public double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
     public String label;
     public boolean driveInverted = false;
-    public double wheelDiameter = 0.10033;
-    public double driveReduction = (14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0);
+    public double wheelDiameter = 0.1008106757429582;
+    public double driveReduction = 1/6.75;
 
     public static SwerveModuleConfiguration frontLeftConfig() {
         var moduleConfig = new SwerveModuleConfiguration();

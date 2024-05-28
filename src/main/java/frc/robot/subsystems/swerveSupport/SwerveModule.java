@@ -41,7 +41,7 @@ public class SwerveModule {
 
         RelativeEncoder driveEncoder = driveMotor.getEncoder();
         double positionConversionFactor = Math.PI * cfg.wheelDiameter * cfg.driveReduction;
-        driveEncoder.setPositionConversionFactor(positionConversionFactor);
+        driveEncoder.setPositionConversionFactor(0.04691941901);
         driveEncoder.setVelocityConversionFactor(positionConversionFactor / 60.0);
     }
 
@@ -106,6 +106,12 @@ public class SwerveModule {
         var voltage = (metersPerSecond / Constants.MAX_INPUT_SPEED * MAX_VOLTAGE) * (Constants.PERCENTAGE_MAX_SPEED / 100);
         SmartDashboard.putNumber(getVelocityLabel("Voltage"), voltage);
         driveMotor.setVoltage(voltage);
+     }
+     private void ResetEncoder()
+     {
+     }
+     private void setReferencePosition(double meters) {
+        driveMotor.getPIDController().setReference(meters, CANSparkMax.ControlType.kPosition);
      }
 
     private void resetSteerRelativeEncoder() {

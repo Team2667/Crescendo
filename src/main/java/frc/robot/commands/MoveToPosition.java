@@ -17,32 +17,32 @@ import frc.robot.subsystems.DriveTrain;
 public class MoveToPosition extends Command {
     private static TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3,2 );
     private static TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3,2 );
-    private static TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(8,8 );
+    private static TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(4,3 );
 
     private static final Transform3d TAG_TO_GOAL = // Where we want to be with respect to the tag goal
         new Transform3d(
             new Translation3d(1.5, 0.0, 0.0),
             new Rotation3d(0.0, 0.0, Math.PI));
     private  DriveTrain driveTrain;
-    private  ProfiledPIDController xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
-    private  ProfiledPIDController yController = new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
-    private  ProfiledPIDController omegaController = new ProfiledPIDController(3, 0, 0, OMEGA_CONSTRAINTS);
+    private  ProfiledPIDController xController = new ProfiledPIDController(0.5, 0.00000001, 0, X_CONSTRAINTS);
+    private  ProfiledPIDController yController = new ProfiledPIDController(0.5, 0, 0, Y_CONSTRAINTS);
+    private  ProfiledPIDController omegaController = new ProfiledPIDController(0.010, 0, 0, OMEGA_CONSTRAINTS);
     private  Supplier<Pose2d> robotPoseSupplier;
     private Pose2d goalPose;
 
 
-    public MoveToPosition(DriveTrain driveTrain, Supplier<Pose2d> robotPoseSupplier) {
+    public MoveToPosition(DriveTrain driveTrain, Supplier<Pose2d> robotPoseSupplier,double x, double y,double rotation) {
         this.driveTrain = driveTrain;
         this.robotPoseSupplier = robotPoseSupplier;
 
 
-        xController.setTolerance(0.2);
-        yController.setTolerance(0.2);
+        xController.setTolerance(0.005);
+        yController.setTolerance(0.005);
         omegaController.setTolerance(Units.degreesToRadians(3));
         omegaController.enableContinuousInput(-Math.PI, Math.PI);
         addRequirements(driveTrain);
 
-        goalPose = new Pose2d(2,2,new Rotation2d(Math.PI));
+        goalPose = new Pose2d(x,y,new Rotation2d(Math.toRadians(rotation)));
     }
 
     @Override

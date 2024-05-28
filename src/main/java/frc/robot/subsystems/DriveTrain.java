@@ -54,6 +54,10 @@ public class DriveTrain extends SubsystemBase {
     public void setRotationalOffsetToCurrent(){
         headingOffset = getGyroscopeRotation().getDegrees();
     }
+
+    public void resetIMU() {
+        pigeon.setYaw(0);
+    }
       
     public DriveTrain(){
         m_frontLeftModule = new SwerveModule(SwerveModuleConfiguration.frontLeftConfig());
@@ -95,6 +99,10 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
+    public void resetEncoders()
+    {
+    }
+
     public SwerveModulePosition[] getSwerveModulePositions() {
         SwerveModulePosition modulePositions[] =
         {
@@ -108,9 +116,14 @@ public class DriveTrain extends SubsystemBase {
 
 
     public void writeWheelPositions() {
-        SmartDashboard.putNumber("FL-angle",m_frontLeftModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("FR-angle",m_frontRightModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("BL-angle",m_backLeftModule.getAbsoluteAngle());
-        SmartDashboard.putNumber("BR-angle",m_backRightModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("FL-angle (radians)",m_frontLeftModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("FR-angle (radians)",m_frontRightModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("BL-angle (radians)",m_backLeftModule.getAbsoluteAngle());
+        SmartDashboard.putNumber("BR-angle (radians)",m_backRightModule.getAbsoluteAngle());
+
+        SmartDashboard.putNumber("FL-distance (meters)",m_frontLeftModule.getWheelPosition());
+        SmartDashboard.putNumber("FR-distance (meters)",m_frontRightModule.getWheelPosition());
+        SmartDashboard.putNumber("BL-distance (meters)",m_backLeftModule.getWheelPosition());
+        SmartDashboard.putNumber("BR-distance (meters)",m_backRightModule.getWheelPosition());
     }
 }
