@@ -43,7 +43,7 @@ public class DriveTrain extends SubsystemBase {
         double yaww=pigeon.getYaw().getValueAsDouble();
         if(yaww<0)
             yaww+=360;
-            yaww=360-yaww;
+            //yaww=360-yaww;
         return Rotation2d.fromDegrees(yaww-headingOffset);
     }
 

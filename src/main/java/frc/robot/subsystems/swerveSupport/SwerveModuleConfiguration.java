@@ -28,7 +28,7 @@ public class SwerveModuleConfiguration {
     public double wheelDiameter = 0.1008106757429582;
     public double driveReduction = 1/6.75;
 
-    public static SwerveModuleConfiguration frontLeftConfig() {
+    public static SwerveModuleConfiguration frontRightConfig() {
         var moduleConfig = new SwerveModuleConfiguration();
         moduleConfig.steerMotorCanId = Constants.FRONT_LEFT_MODULE_STEER_MOTOR;
         moduleConfig.steerAbsoluteEncoderCanId = Constants.FRONT_LEFT_MODULE_STEER_ENCODER;
@@ -40,7 +40,7 @@ public class SwerveModuleConfiguration {
         return moduleConfig;
     }
 
-    public static SwerveModuleConfiguration frontRightConfig() {
+    public static SwerveModuleConfiguration frontLeftConfig() {
         var moduleConfig = new SwerveModuleConfiguration();
         moduleConfig.steerMotorCanId = Constants.FRONT_RIGHT_MODULE_STEER_MOTOR;
         moduleConfig.steerAbsoluteEncoderCanId = Constants.FRONT_RIGHT_MODULE_STEER_ENCODER;
@@ -52,7 +52,7 @@ public class SwerveModuleConfiguration {
         return moduleConfig;
     }
 
-    public static SwerveModuleConfiguration backRightConfig() {
+    public static SwerveModuleConfiguration backLeftConfig() {
         var moduleConfig = new SwerveModuleConfiguration();
         moduleConfig.steerMotorCanId = Constants.BACK_RIGHT_MODULE_STEER_MOTOR;
         moduleConfig.steerAbsoluteEncoderCanId = Constants.BACK_RIGHT_MODULE_STEER_ENCODER;
@@ -60,11 +60,10 @@ public class SwerveModuleConfiguration {
         moduleConfig.driveMotorCanId = Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR;
         moduleConfig.revolutionsPerMeter = Constants.WHEEL_REVOLUTIONS_PER_METER;
         moduleConfig.label = "Back Right";
-        moduleConfig.driveInverted=true;
         return moduleConfig;
     }
 
-    public static SwerveModuleConfiguration backLeftConfig() {
+    public static SwerveModuleConfiguration backRightConfig() {
         var moduleConfig = new SwerveModuleConfiguration();
         moduleConfig.steerMotorCanId = Constants.BACK_LEFT_MODULE_STEER_MOTOR;
         moduleConfig.steerAbsoluteEncoderCanId = Constants.BACK_LEFT_MODULE_STEER_ENCODER;
