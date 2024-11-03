@@ -2,12 +2,18 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import static frc.robot.Constants.*;
 
+import java.util.List;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -77,6 +83,13 @@ public class DriveTrain extends SubsystemBase {
         m_backRightModule.setDesiredState(states[1]);
     }
 
+    public void drive(SwerveModuleState[] states){
+        m_frontLeftModule.setDesiredState(states[2]);
+        m_frontRightModule.setDesiredState(states[3]);
+        m_backLeftModule.setDesiredState(states[0]);
+        m_backRightModule.setDesiredState(states[1]);
+    }
+
     public void moveFieldRelative(double speedMetersPerSecond, double angleInRadians) {
       var moduleState = new SwerveModuleState(speedMetersPerSecond, new Rotation2d(angleInRadians));
       m_frontLeftModule.setDesiredState(moduleState);
@@ -125,5 +138,15 @@ public class DriveTrain extends SubsystemBase {
         SmartDashboard.putNumber("FR-distance (meters)",m_frontRightModule.getWheelPosition());
         SmartDashboard.putNumber("BL-distance (meters)",m_backLeftModule.getWheelPosition());
         SmartDashboard.putNumber("BR-distance (meters)",m_backRightModule.getWheelPosition());
+    }
+
+    public Trajectory generateTrajectory(Pose2d startPt, List<Translation2d> wayPoints, Pose2d endPt) {
+        return TrajectoryGenerator.generateTrajectory(startPt, wayPoints, endPt, createConfig(m_kinematics));
+    }
+
+    private TrajectoryConfig createConfig(SwerveDriveKinematics kinematics) {
+        var config = new TrajectoryConfig(0.5, 2.0);
+        config.setKinematics(kinematics);
+        return config;
     }
 }
