@@ -15,6 +15,8 @@ import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.commands.SpinUpLauncher;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveFieldRelative;
@@ -31,6 +33,8 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
@@ -74,6 +78,7 @@ public class RobotContainer {
   private MoveArms moveArms;
   private SendableChooser<Command> mailman;
   private Supplier<Pose2d> wheretogo;
+  private TrajectoryCommandFactory trajectoryCommandFactory;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_cmdcontroller = new CommandXboxController(
@@ -92,13 +97,12 @@ public class RobotContainer {
     configureIntakeBindings(Constants.DISABLE_INTAKE);
     configureCandleBindings(Constants.DISABLE_CANDLE || Constants.DISABLE_INTAKE);
     configureLauncherBindings(Constants.DISABLE_LAUNCHER);
-    configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
     configurePoseEstimatorSubsystem(drivetrain);
     configureArms(Constants.DISABLE_ARMS);
-        populateMailbox();
+    configureCompoundCommands(Constants.DISABLE_INTAKE || Constants.DISABLE_LAUNCHER);
+    this.trajectoryCommandFactory = new TrajectoryCommandFactory(drivetrain, poseEstimatorSubsystem);
+    populateMailbox();
      SmartDashboard.putData("autonomous modee", mailman);
-
-
   }
 
   /**
@@ -224,7 +228,9 @@ public class RobotContainer {
 
     m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,intake,3500,2500,true,false).withTimeout(8)
       .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
-    // TODO: Bind a command to the right bumper that:
+    
+    m_cmdcontroller.rightBumper().onTrue(createMoveToPositionCommand());
+      // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
   }
@@ -282,5 +288,15 @@ public class RobotContainer {
   
   public Command getAutonomousCommand(){
     return mailman.getSelected();
+  }
+
+  public Command createMoveToPositionCommand() {
+    Transform2d transformStart = new Transform2d(3, 3, new Rotation2d(0));
+    Pose2d startingPos = poseEstimatorSubsystem.getPosition();
+    Pose2d endingPos = startingPos.transformBy(transformStart);
+    List<Translation2d> wayPoints = new ArrayList<>();
+    wayPoints.add( new Translation2d(1, 1));
+    wayPoints.add(new Translation2d(1,1));
+    return trajectoryCommandFactory.createTrajectoryCommand(poseEstimatorSubsystem.getPosition(), wayPoints, endingPos);
   }
 }
