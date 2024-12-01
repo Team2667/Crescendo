@@ -229,7 +229,6 @@ public class RobotContainer {
     m_cmdcontroller.a().onTrue(new SpinUpLauncher(launcher,intake,3500,2500,true,false).withTimeout(8)
       .andThen(new FeedNoteToLauncher(intake).alongWith(new SpinUpLauncher(launcher,intake,3500,2500,false,true)).withTimeout(8).andThen(new Rumbly(m_controller).withTimeout(0.3))));
     
-    m_cmdcontroller.rightBumper().onTrue(createMoveToPositionCommand());
       // TODO: Bind a command to the right bumper that:
     // 1. Runs LaunchNote for .5 secons.
     // 2. Runs FeedNoteToLauncher and LaunchNote togeter for 2 seconds
@@ -277,11 +276,10 @@ public class RobotContainer {
       mailman.addOption("back", new DriveFieldRelative(drivetrain, 0, 0.15));//.withTimeout(15));
       mailman.addOption("nothing", null);
       mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
-      
-      mailman.addOption("precise vroom vroom",
-     new MoveToPosition(drivetrain,()->poseEstimatorSubsystem.getPosition(),15.228,5.546,180)
-      );
-            mailman.addOption("precise vroom vroom back",new MoveToPosition(drivetrain,()->poseEstimatorSubsystem.getPosition(),0,0,180));
+
+      mailman.addOption("move with waypoints", createTrajectoryCommandWithWayPoints());
+      mailman.addOption("move without waypoints", createTrajectoryCommandNoWayPoints());
+      mailman.addOption("move with waypoints starting from diff location", createTrajectoryCommandStartDiffThanRobotPosition());
       SmartDashboard.putData("autonomous mode", mailman);
     }
   }
@@ -290,13 +288,31 @@ public class RobotContainer {
     return mailman.getSelected();
   }
 
-  public Command createMoveToPositionCommand() {
+  public Command createTrajectoryCommandWithWayPoints() {
     Transform2d transformStart = new Transform2d(3, 3, new Rotation2d(0));
     Pose2d startingPos = poseEstimatorSubsystem.getPosition();
     Pose2d endingPos = startingPos.transformBy(transformStart);
     List<Translation2d> wayPoints = new ArrayList<>();
-    wayPoints.add( new Translation2d(1, 1));
-    wayPoints.add(new Translation2d(1,1));
+    wayPoints.add( new Translation2d(1.66, 1));
+    wayPoints.add(new Translation2d(1.1,1));
+    return trajectoryCommandFactory.createTrajectoryCommand(poseEstimatorSubsystem.getPosition(), wayPoints, endingPos);
+  }
+
+  public Command createTrajectoryCommandNoWayPoints() {
+    Transform2d transformStart = new Transform2d(3, 3, new Rotation2d(0));
+    Pose2d startingPos = poseEstimatorSubsystem.getPosition();
+    Pose2d endingPos = startingPos.transformBy(transformStart);
+    List<Translation2d> wayPoints = new ArrayList<>();
+    return trajectoryCommandFactory.createTrajectoryCommand(poseEstimatorSubsystem.getPosition(), wayPoints, endingPos);
+  }
+
+  public Command createTrajectoryCommandStartDiffThanRobotPosition() {
+    Transform2d transformStart = new Transform2d(3, 3, new Rotation2d(0));
+    Pose2d startingPos = poseEstimatorSubsystem.getPosition().transformBy((new Transform2d(.5, 1, new Rotation2d(0))));
+    Pose2d endingPos = startingPos.transformBy(transformStart);
+    List<Translation2d> wayPoints = new ArrayList<>();
+    wayPoints.add( new Translation2d(1.66, 1));
+    wayPoints.add(new Translation2d(1.1,1));
     return trajectoryCommandFactory.createTrajectoryCommand(poseEstimatorSubsystem.getPosition(), wayPoints, endingPos);
   }
 }
