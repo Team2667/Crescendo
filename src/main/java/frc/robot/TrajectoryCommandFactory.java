@@ -29,6 +29,7 @@ public class TrajectoryCommandFactory {
 
      public TrajectoryCommandFactory(DriveTrain driveTrain, PoseEstimatorSubsystem poseEstimator) {
         this.driveTrain = driveTrain;
+        this.poseEstimator = poseEstimator;
      }
 
     public SwerveControllerCommand createTrajectoryCommand(Pose2d startingPos, List<Translation2d> wayPoints, Pose2d endingPos) {
