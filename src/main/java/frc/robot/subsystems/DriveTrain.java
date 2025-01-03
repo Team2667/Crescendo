@@ -39,12 +39,22 @@ public class DriveTrain extends SubsystemBase {
         new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0)
     );
 
+    public double getRawYaw(){
+        return pigeon.getYaw().getValueAsDouble();
+    }
+
+    public double getYawAdjusted(){
+      //  double yaw = pigeon.getYaw().getValueAsDouble() % 360;
+        return pigeon.getRotation2d().getRadians();
+
+    }
+
     public Rotation2d getGyroscopeRotation() {    
-        double yaww=pigeon.getYaw().getValueAsDouble();
+       /* *double yaww=pigeon.getYaw().getValueAsDouble();
         if(yaww<0)
             yaww+=360;
-            //yaww=360-yaww;
-        return Rotation2d.fromDegrees(yaww-headingOffset);
+            //yaww=360-yaww;*/
+        return pigeon.getRotation2d();
     }
 
     public SwerveDriveKinematics getKinematics() {

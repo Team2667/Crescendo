@@ -275,12 +275,11 @@ public class RobotContainer {
       mailman.addOption("nothing", null);
       mailman.addOption("DO NOT USE ON FIELD!!!!! arm retract (for the pit)",new MoveArmsUntilResistance(arms, m_controller));
       
-      mailman.addOption("precise vroom vroom",
-     new MoveToPosition(drivetrain,new poseEstimatorSubsystem,locations[0][0],locations[0][1],locations[0][2])
-      );
+    /*  mailman.addOption("precise vroom vroom",
+    new MoveToPosition(drivetrain,new poseEstimatorSubsystem(),locations[0][0],locations[0][1],locations[0][2])  );
       mailman.addOption("save position",new SavePosition(drivetrain, poseEstimatorSubsystem));
             mailman.addOption("precise vroom vroom back",new MoveToPosition(drivetrain,()->poseEstimatorSubsystem.getPosition(),0,0,180));
-      SmartDashboard.putData("autonomous mode", mailman);
+      SmartDashboard.putData("autonomous mode", mailman);*/
     }
   }
   
