@@ -29,6 +29,7 @@ public class SwerveModule {
         cfg = config;
         absoluteSteerEncoder = createAbsoluteCanEncoder(cfg.steerAbsoluteEncoderCanId, cfg.steeringOffsetInRadians);
         steerMotor = new CANSparkMax(cfg.steerMotorCanId, MotorType.kBrushless);
+        steerMotor.setInverted(true);
         setPIDValues(steerMotor, config.steerP, config.steerI, config.steerD);
         driveMotor = new CANSparkFlex(cfg.driveMotorCanId, MotorType.kBrushless);
         setPIDValues(driveMotor, cfg.driveP, cfg.driveI, cfg.driveD);
@@ -122,7 +123,7 @@ public class SwerveModule {
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         config.MagnetSensor.MagnetOffset = offset;
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
         CANcoder encoder = new CANcoder(canId);
         

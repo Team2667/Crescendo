@@ -13,6 +13,7 @@ import frc.robot.commands.MoveArmsUntilResistance;
 import frc.robot.commands.MoveToPosition;
 import frc.robot.commands.ResetIMU;
 import frc.robot.commands.Rumbly;
+import frc.robot.commands.SavePosition;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -58,6 +59,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  public static double[][] locations;
+  public static int locationCount=0;
   // The robot's subsystems and commands are defined here...
   // private final Intake intake= new Intake();
   // private final IntakeStart intakestart = new IntakeStart(intake);
@@ -174,8 +177,8 @@ public class RobotContainer {
       drivetrain = new DriveTrain();
       drivetrain.setDefaultCommand(new DefaultDriveCommand(drivetrain,
           () -> -modifyAxis(m_controller.getLeftY()),
-          () -> modifyAxis(m_controller.getLeftX()),
-          () -> -modifyAxis(m_controller.getRightX())));
+          () -> -modifyAxis(m_controller.getLeftX()),
+          () -> modifyAxis(m_controller.getRightX())));
       forwardCommand = new DriveFieldRelative(drivetrain, 0, .5);
       backCommand = new DriveFieldRelative(drivetrain, Math.PI, .5);
       leftCommand = new DriveFieldRelative(drivetrain, (2 * Math.PI * 3) / 4, .5);

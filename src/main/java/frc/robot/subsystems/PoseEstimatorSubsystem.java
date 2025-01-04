@@ -72,6 +72,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot X", position.getX());
         SmartDashboard.putNumber("Robot Y", position.getY());
         SmartDashboard.putNumber("Robot Rotation degrees", position.getRotation().getDegrees());
+        SmartDashboard.putNumber("Yaw",driveTrain.getRawYaw());
+        SmartDashboard.putNumber("Adjusted Yaw",driveTrain.getYawAdjusted());
    
     }
 
